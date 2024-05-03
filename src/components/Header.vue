@@ -6,8 +6,8 @@
     </div>
     <div v-if="store.isLogin" class="user-bar">
       <Avator />
-      <Button />
-      <Button />
+      <Button>消息</Button>
+      <Button>设置</Button>
     </div>
   </div>
 </template>

@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less">
 .application{
   width:100vw;
   height: 100vh;
@@ -14,6 +14,19 @@
   grid-template-rows: auto 1fr;
   align-items: center;
   justify-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #FAC3B588;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #FAC3B5;
+  border-radius: 0;
 }
 </style>
 

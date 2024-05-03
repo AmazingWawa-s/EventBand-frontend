@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="home-main-container">
     <div class="login-container">
       <img src="../assets/icon.svg" alt="" />
       <div class="login-frame">
@@ -13,7 +13,7 @@
             <input type="text" />
           </div>
         </div>
-        <Button @click="login" />
+        <Button @click="login">登录</Button>
       </div>
     </div>
   </div>
@@ -22,19 +22,19 @@
 <script setup>
 import Button from "./Button.vue";
 import { useStore } from "../store";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const login = () => {
-    store.isLogin=true;
-    router.push({
-        path:'/user'
-    })
+  store.isLogin = true;
+  router.push({
+    path: "/user",
+  });
 };
 </script>
 
 <style lang="less" scoped>
-.main-container {
+.home-main-container {
   width: 100%;
   max-width: 1200px;
   height: 100%;
@@ -59,7 +59,7 @@ const login = () => {
 
       .login-form {
         display: flex;
-        height:100%;
+        height: 100%;
         justify-content: space-around;
         align-items: center;
         flex-direction: column;
