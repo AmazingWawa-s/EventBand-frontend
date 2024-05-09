@@ -3,7 +3,7 @@
     <div class="login-container">
       <img src="../assets/icon.svg" alt="" />
       <div class="login-frame">
-        <div class="login-form">
+        <form class="login-form">
           <div>
             用户名
             <input type="text" />
@@ -12,7 +12,7 @@
             密码
             <input type="text" />
           </div>
-        </div>
+        </form>
         <Button @click="login">登录</Button>
       </div>
     </div>
@@ -23,13 +23,26 @@
 import Button from "./Button.vue";
 import { useStore } from "../store";
 import { useRouter } from "vue-router";
+import { ApiLogin } from "../api";
+import axios from "axios";
+
 const router = useRouter();
 const store = useStore();
 const login = () => {
-  store.isLogin = true;
-  router.push({
-    path: "/user",
-  });
+  console.log("check");
+  ApiLogin("shayu", "123456")
+    .then((res) => {
+      const { userToken } = res.data;
+      console.log(res.data);
+      localStorage.setItem("token", userToken);
+      store.isLogin = true;
+      router.push({
+        path: "/user",
+      });
+    })
+    .catch((res) => {
+      console.log(res);
+    });
 };
 </script>
 

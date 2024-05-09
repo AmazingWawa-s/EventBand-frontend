@@ -9,7 +9,7 @@
 .application{
   width:100vw;
   height: 100vh;
-  background-color: #fff8ee;
+  background-color: #ffffff;
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;
