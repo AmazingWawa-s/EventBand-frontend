@@ -1,8 +1,7 @@
 <template>
   <div class="header">
     <div class="header-front">
-      <img class="icon" src="../assets/EventBand.svg" alt="" />
-      &emsp;header
+      <img class="icon" src="../assets/icon_logo.svg" alt="" />
     </div>
     <div v-if="store.isLogin" class="user-bar">
       <Avator />
@@ -15,12 +14,12 @@
 <style lang="less" scoped>
 .header {
   height: 60px;
-  width:100%;
+  width: 100%;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #000;
+  border-bottom: 1px solid #ddd;
 
   .header-front {
     display: flex;
@@ -33,7 +32,7 @@
   }
   .user-bar {
     display: flex;
-    height:100%;
+    height: 100%;
     align-items: center;
   }
 }
@@ -42,6 +41,6 @@
 <script setup>
 import Button from "./Button.vue";
 import Avator from "./Avator.vue";
-import { useStore } from '../store';
+import { useStore } from "../store";
 const store = useStore();
 </script>

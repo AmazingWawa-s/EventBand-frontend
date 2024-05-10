@@ -9,24 +9,26 @@
 .application{
   width:100vw;
   height: 100vh;
-  background-color: #ffffff;
+  overflow: hidden;
+  background-color:#fff;
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;
   justify-items: center;
+  color:#333333;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #FAC3B588;
+  background-color: #ffffff88;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #FAC3B5;
-  border-radius: 0;
+  background-color: #dfdfdf;
+  border-radius: 5px;
 }
 </style>
 
