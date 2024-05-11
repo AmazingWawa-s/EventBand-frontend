@@ -3,10 +3,13 @@
     <div class="header-front">
       <img class="icon" src="../assets/icon_logo.svg" alt="" />
     </div>
-    <div v-if="store.isLogin" class="user-bar">
-      <Avator />
-      <Button>消息</Button>
-      <Button>设置</Button>
+    <div class="header-middle">通知栏</div>
+    <div class="header-back">
+      <div v-if="store.isLogin" class="user-bar">
+        <Avator />
+        <Button>消息</Button>
+        <Button>设置</Button>
+      </div>
     </div>
   </div>
 </template>

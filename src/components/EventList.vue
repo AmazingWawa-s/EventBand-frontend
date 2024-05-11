@@ -4,6 +4,5 @@
 
 <style lang="less" scoped>
 .eventlist-main-container {
-  padding-left: 50px;
 }
 </style>

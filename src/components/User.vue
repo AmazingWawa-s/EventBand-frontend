@@ -16,13 +16,13 @@
         >
           <div class="grid-events-create">
             <div class="grid-events-sub-frame">
-              <div class="grid-events-square2"></div>
+              <!-- <div class="grid-events-square2"></div> -->
               <EventCreateForm />
             </div>
           </div>
           <div class="grid-events-list">
             <div class="grid-events-sub-frame">
-              <div class="grid-events-square1"></div>
+              <!-- <div class="grid-events-square1"></div> -->
               <EventList />
             </div>
           </div>
@@ -70,6 +70,7 @@
   }
 
   .grid-tasks {
+    grid-area: b;
   }
 
   .grid-events {
@@ -188,7 +189,7 @@ import Button from "../components/Button.vue";
 import Calendar from "../components/Calendar.vue";
 import Todolist from "../components/TodoList.vue";
 import EventCreateForm from "../components/EventCreateForm.vue";
-import EventList from "../components/EventList.vue"
+import EventList from "../components/EventList.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 const router = useRouter();
