@@ -48,7 +48,7 @@
     align-items: center;
     justify-content: space-between;
 
-    .button{
+    .button {
       cursor: pointer;
     }
   }

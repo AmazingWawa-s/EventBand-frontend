@@ -20,6 +20,7 @@
 
 ::-webkit-scrollbar {
   width: 5px;
+  height:5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -28,7 +29,7 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #dfdfdf;
-  border-radius: 5px;
+  border-radius: 20px;
 }
 </style>
 
