@@ -6,11 +6,6 @@
     </div>
     <div class="participants-body">
       <div class="participants-contents">
-        <!-- <div class="menu-head participants-item">
-          <div>成员</div>
-          <div></div>
-          <div></div>
-        </div> -->
         <div v-for="i in 20" class="participants-item" :key="i">
           <div>小明</div>
           <div>A组</div>
@@ -42,9 +37,9 @@
   .participants-body {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
     background-color: #eee;
-    border-radius: 10px;
+    border-radius: 6px 0 0 6px;
     font-size: 16px;
 
     .participants-contents {

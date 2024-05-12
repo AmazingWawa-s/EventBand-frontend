@@ -16,6 +16,11 @@ const routes = [
         path: '/eventDetail',
         name: 'eventDetail',
         component: () => import('../components/EventDetail.vue')
+    },
+    {
+        path:'/admin',
+        name:'admin',
+        component:()=>import('../components/Admin.vue')
     }
 ]
 

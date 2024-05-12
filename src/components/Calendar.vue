@@ -13,22 +13,22 @@
       <div>四</div>
       <div>五</div>
       <div>六</div>
-      <div
-        v-for="(item, index) in calendarArray"
-        :key="index"
-        :class="{
-          'calendar-item': true,
-          'calendar-selected': true,
-          'calendar-past':
-            year < currentDate.getFullYear() ||
-            (year == currentDate.getFullYear() && month - 1 < currentDate.getMonth()) ||
-            (item < currentDate.getDate() && month - 1 == currentDate.getMonth()),
-        }"
-      >
-        <div :class="{ 'calendar-item-sub': item, 'calendar-void': !item }">
-          {{ item }}
+        <div
+          v-for="(item, index) in calendarArray"
+          :key="index"
+          :class="{
+            'calendar-item': true,
+            'calendar-selected': true,
+            'calendar-past':
+              year < currentDate.getFullYear() ||
+              (year == currentDate.getFullYear() && month - 1 < currentDate.getMonth()) ||
+              (item < currentDate.getDate() && month - 1 == currentDate.getMonth()),
+          }"
+        >
+          <div :class="{ 'calendar-item-sub': item, 'calendar-void': !item }">
+            {{ item }}
+          </div>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -100,6 +100,8 @@ const currentDate = new Date();
 const year = ref(currentDate.getFullYear());
 const month = ref(currentDate.getMonth() + 1);
 // const calendarArray = ref([...new Array(35)]);
+const calendarArray_previous = ref([]);
+const calendarArray_next = ref([]);
 
 const calendarArray = computed(() => {
   let firstDay = new Date(year.value, month.value - 1, 1).getDay();
@@ -123,17 +125,5 @@ const changeMonth = (amount) => {
     month.value = 1;
     year.value += 1;
   }
-
-  // let firstDay = new Date(year.value, month.value - 1, 1).getDay();
-  // let lastDate = new Date(year.value, month.value, 0).getDate();
-  // let count = 1;
-  // for (let index = 0; index < 35; index++) {
-  //   if (index >= firstDay && count <= lastDate) {
-  //     calendarArray.value[index] = count++;
-  //   } else {
-  //     calendarArray.value[index] = "";
-  //   }
-  // }
-  // console.log(calendarArray.value)
 };
 </script>

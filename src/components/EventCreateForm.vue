@@ -1,7 +1,7 @@
 <template>
   <div class="ecform-main-container">
     <div class="ecform-header">
-      <span>公共</span>
+      <span>公众</span>
       <span>|</span>
       <span>私人</span>
     </div>

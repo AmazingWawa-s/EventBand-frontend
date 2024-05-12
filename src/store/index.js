@@ -5,6 +5,7 @@ export const useStore = defineStore('id', {
         currentMenu: null,
         menu: [
         ],
-        token: ''
+        token: '',
+        notice: ''
     }),
 })
