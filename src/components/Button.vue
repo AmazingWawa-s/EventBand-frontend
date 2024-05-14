@@ -6,7 +6,7 @@
 
 <style lang="less" scoped>
 .button-main-container {
-  border-radius: 5px;
+  border-radius: 5px 10px 5px 10px;
   padding: 5px;
   margin: 0 5px;
   border: 1px solid #000;

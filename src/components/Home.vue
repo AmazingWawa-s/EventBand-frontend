@@ -1,7 +1,7 @@
 <template>
   <div class="home-main-container">
     <div class="scrollsnap section1">
-      <img class="section1-logo" src="../assets/icon_title.svg" alt="" />
+      <img class="section1-logo" src="../assets/title_ver2.svg" alt="" />
       <div class="section1-msg">立即开始</div>
       <div class="section1-login-frame">
         <div class="login-form">
@@ -99,8 +99,8 @@ const login = () => {
 
       .login-form {
         background-color: #eee;
-        height: 90%;
-        width: 80%;
+        height: 100%;
+        width: 100%;
         border-radius: 10px;
         padding: 10px;
         display: flex;

@@ -6,10 +6,14 @@
     </div>
     <div class="schedule-body"></div>
   </div>
+  <!-- <div class="edit-filter"></div> -->
 </template>
 
 <style lang="less" scoped>
+
 .m-schedule-main-container {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -25,7 +29,7 @@
   }
 
   .schedule-body {
-    border-radius: 10px;
+    border-radius: @custom;
     background-color: #eee;
   }
 }

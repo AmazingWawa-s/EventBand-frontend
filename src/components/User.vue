@@ -29,21 +29,21 @@
         </div>
       </div>
       <div @click="createEvent" class="grid-events-create-button">
-        <div class="create-button">
-          <span :class="{ 'button-rotate': isSlide }">＋</span>
+        <div class="create-button-group">
+          <div class="create-button">
+            <span :class="{ 'button-rotate': isSlide }">＋</span>
+          </div>
+          <p>创建</p>
         </div>
-        <p>创建</p>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="less" scoped>
-@padding-L: 10px;
-@border-radius-L: 10px;
-@gap: 10px;
-
 .user-main-container {
+  position: relative;
+  z-index: @z-index-user;
   width: 100%;
   height: 100%;
   max-width: 1366px;
@@ -54,14 +54,14 @@
   grid-template-areas:
     "a b"
     "c c";
-  gap: @gap;
-  padding: @padding-L;
+  gap: @user-gap;
+  padding: @user-padding;
   overflow: hidden;
 
   .grid-item {
-    border-radius: @border-radius-L;
-    border: 1px solid #eee;
-    background-color: #fff;
+    border-radius: @user-item-border-radius;
+    border: @user-item-border;
+    background-color: @user-item-bgc;
   }
 
   .grid-calendar {
@@ -76,8 +76,8 @@
   .grid-events {
     grid-area: c;
     display: grid;
-    gap: @gap;
-    padding: @padding-L;
+    gap: @user-gap;
+    padding: @user-padding;
     grid-template-columns: 1fr auto;
 
     .grid-events-frame {
@@ -86,7 +86,7 @@
 
       position: relative;
       overflow: hidden;
-      border-radius: @border-radius-L;
+      border-radius: @user-item-border-radius;
 
       .grid-events-frame-scroll {
         position: absolute;
@@ -99,13 +99,13 @@
         grid-template-columns: 1fr 1fr;
 
         .grid-events-list {
-          border-radius: @border-radius-L;
+          border-radius: @user-item-border-radius;
           background-color: #ddd;
         }
 
         .grid-events-create {
           background-color: #ddd;
-          border-radius: @border-radius-L;
+          border-radius: @user-item-border-radius;
         }
 
         .grid-events-sub-frame {
@@ -149,7 +149,7 @@
       user-select: none;
       cursor: pointer;
       font-weight: 600;
-      border-radius: @border-radius-L;
+      border-radius: @user-item-border-radius-sub;
       font-size: 30px;
       display: flex;
       flex-direction: column;
@@ -157,19 +157,26 @@
       justify-content: center;
       height: 100%;
       width: 200px;
-      background-color: #eee;
+      background-color: @theme-color;
+      color: #fff;
+
+      .create-button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: 500ms;
+      }
 
       .create-button {
         margin: 10px;
-        border: 3px solid #333333;
-        border-radius: 5px 10px 5px 10px;
+        border: 3px solid #fff;
+        border-radius: @user-create-button-border-radius;
         width: 50px;
         height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 50px;
-        font-weight: 100;
       }
 
       .create-button span {
@@ -179,6 +186,10 @@
       .button-rotate {
         rotate: 45deg;
       }
+    }
+
+    .grid-events-create-button:hover .create-button-group {
+      scale: 1.3;
     }
   }
 }

@@ -6,21 +6,25 @@
 </template>
 
 <style lang="less">
-.application{
-  width:100vw;
+.application {
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color:#fff;
+  background-color: #fff;
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;
   justify-items: center;
-  color:#333333;
+  color: #333333;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
-  height:5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -34,5 +38,5 @@
 </style>
 
 <script setup>
-import Header from './components/Header.vue';
+import Header from "./components/Header.vue";
 </script>

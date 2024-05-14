@@ -6,6 +6,7 @@ export const useStore = defineStore('id', {
         menu: [
         ],
         token: '',
-        notice: ''
+        notice: '',
+        userName: 'AmazingWawa'
     }),
 })
