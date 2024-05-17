@@ -6,7 +6,7 @@
     </div>
     <div class="participants-body">
       <div class="participants-contents">
-        <div v-for="i in 20" class="participants-item" :key="i">
+        <div v-for="i in 4" class="participants-item" :key="i">
           <div>小明</div>
           <div>A组</div>
           <div>联系</div>
@@ -19,6 +19,8 @@
 
 <style lang="less" scoped>
 .m-participants-main-container {
+  position: relative;
+  z-index: @z-index-modules;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -62,5 +64,9 @@
       }
     }
   }
+}
+
+.module-focus {
+  z-index: @z-index-module-focus;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div class="calendar-main-container">
     <div class="calendar-header">
-      <p class="button" @click="changeMonth(-1)">{{ "<" }}</p>
+      <p class="button" @click="changeMonth(-1)">{{ "<<<<<" }}</p>
       <p>{{ year + " " }}年{{ " " + month + " " }}月</p>
-      <p class="button" @click="changeMonth(1)">{{ ">" }}</p>
+      <p class="button" @click="changeMonth(1)">{{ ">>>>>" }}</p>
     </div>
     <div class="calendar-body">
       <div>日</div>
@@ -13,22 +13,22 @@
       <div>四</div>
       <div>五</div>
       <div>六</div>
-        <div
-          v-for="(item, index) in calendarArray"
-          :key="index"
-          :class="{
-            'calendar-item': true,
-            'calendar-selected': true,
-            'calendar-past':
-              year < currentDate.getFullYear() ||
-              (year == currentDate.getFullYear() && month - 1 < currentDate.getMonth()) ||
-              (item < currentDate.getDate() && month - 1 == currentDate.getMonth()),
-          }"
-        >
-          <div :class="{ 'calendar-item-sub': item, 'calendar-void': !item }">
-            {{ item }}
-          </div>
+      <div
+        v-for="(item, index) in calendarArray"
+        :key="index"
+        :class="{
+          'calendar-item': true,
+          'calendar-selected': true,
+          'calendar-past':
+            year < currentDate.getFullYear() ||
+            (year == currentDate.getFullYear() && month - 1 < currentDate.getMonth()) ||
+            (item < currentDate.getDate() && month - 1 == currentDate.getMonth()),
+        }"
+      >
+        <div :class="{ 'calendar-item-sub': item, 'calendar-void': !item }">
+          {{ item }}
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +48,14 @@
     align-items: center;
     justify-content: space-between;
 
+    img {
+      height: 100%;
+    }
+
     .button {
+      flex-grow: 1;
+      text-align: center;
+      font-family: "consolas";
       cursor: pointer;
     }
   }

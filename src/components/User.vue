@@ -43,7 +43,7 @@
 <style lang="less" scoped>
 .user-main-container {
   position: relative;
-  z-index: @z-index-user;
+  z-index: @z-index-body;
   width: 100%;
   height: 100%;
   max-width: 1366px;
@@ -60,7 +60,7 @@
 
   .grid-item {
     border-radius: @user-item-border-radius;
-    border: @user-item-border;
+    // border: @user-item-border;
     background-color: @user-item-bgc;
   }
 

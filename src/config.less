@@ -6,10 +6,13 @@
 
 //z-index汇总———————————————————
 @z-index-header: 5; //顶部栏
-@z-index-header-scanlines: 6; //顶部栏-电视线
-@z-index-header-shadow: 10; //顶部栏-搜索栏顶层阴影
+@z-index-header-scanlines: @z-index-header + 1; //顶部栏-电视线
+@z-index-header-shadow: @z-index-header-scanlines + 1; //顶部栏-搜索栏顶层阴影
+@z-index-body: 1; //内容区
+@z-index-modules: 2; //活动详情页-模块
+@z-index-filter: 3; //活动详情页-遮罩层
+@z-index-module-focus: 4; //活动详情页-模块-选中
 
-@z-index-user: 1; //用户首页
 
 //顶部栏————————————————————————
 @header-height: 60px; //高度
@@ -27,3 +30,7 @@
 @user-item-border: 1px solid #eee; //表格元素-边框
 @user-item-bgc: #fff; //表格元素-背景色
 @user-create-button-border-radius: @header-border-radius; //创建活动按钮中的图标-圆角
+
+//活动详情页—————————————————————
+@event-detail-gap: @user-gap; //表格内间距
+@event-detail-padding: @user-padding; //页面内边距

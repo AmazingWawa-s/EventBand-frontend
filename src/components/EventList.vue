@@ -1,6 +1,6 @@
 <template>
   <div class="eventlist-main-container">
-    <div>活动1</div>
+    <div>活动列表</div>
   </div>
 </template>
 
