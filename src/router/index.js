@@ -18,9 +18,14 @@ const routes = [
         component: () => import('../components/EventDetail.vue')
     },
     {
-        path:'/admin',
-        name:'admin',
-        component:()=>import('../components/Admin.vue')
+        path: '/admin',
+        name: 'admin',
+        component: () => import('../components/Admin.vue')
+    },
+    {
+        path: '/loading',
+        name: 'loading',
+        component: () => import('../components/LoadingTest.vue')
     }
 ]
 

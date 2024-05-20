@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     open: true,
     cors: true,
+    hmr: true,
     proxy: {
       '/api': {
         target: 'http://192.168.43.66:8000',

@@ -29,12 +29,7 @@
         </div>
       </div>
       <div @click="createEvent" class="grid-events-create-button">
-        <div class="create-button-group">
-          <div class="create-button">
-            <span :class="{ 'button-rotate': isSlide }">＋</span>
-          </div>
-          <p>创建</p>
-        </div>
+        <CreateButton />
       </div>
     </div>
   </div>
@@ -61,6 +56,7 @@
   .grid-item {
     border-radius: @user-item-border-radius;
     // border: @user-item-border;
+    overflow: hidden;
     background-color: @user-item-bgc;
   }
 
@@ -76,6 +72,7 @@
   .grid-events {
     grid-area: c;
     display: grid;
+    overflow: hidden;
     gap: @user-gap;
     padding: @user-padding;
     grid-template-columns: 1fr auto;
@@ -146,50 +143,16 @@
     }
 
     .grid-events-create-button {
+      position: relative;
       user-select: none;
+      overflow: hidden;
       cursor: pointer;
       font-weight: 600;
       border-radius: @user-item-border-radius-sub;
       font-size: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       height: 100%;
       width: 200px;
-      background-color: @theme-color;
-      color: #fff;
-
-      .create-button-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: 500ms;
-      }
-
-      .create-button {
-        margin: 10px;
-        border: 3px solid #fff;
-        border-radius: @user-create-button-border-radius;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 50px;
-      }
-
-      .create-button span {
-        transition: 500ms;
-      }
-
-      .button-rotate {
-        rotate: 45deg;
-      }
-    }
-
-    .grid-events-create-button:hover .create-button-group {
-      scale: 1.3;
+      height: 386px;
     }
   }
 }
@@ -201,6 +164,7 @@ import Calendar from "../components/Calendar.vue";
 import Todolist from "../components/TodoList.vue";
 import EventCreateForm from "../components/EventCreateForm.vue";
 import EventList from "../components/EventList.vue";
+import CreateButton from "../components/svg/CreateButton.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 const router = useRouter();

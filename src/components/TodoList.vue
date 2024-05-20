@@ -1,25 +1,37 @@
 <template>
   <div class="todolist-main-container">
-    <div @click="() => (tabChange = true)" class="todolist-tab specified">
-      选定日期的事项
-    </div>
+    <!-- <div @click="() => (tabChange = true)" class="todolist-tab specified">2024/5/16</div>
     <div @click="() => (tabChange = false)" class="todolist-tab general">待办</div>
-    <div :class="{ 'todolist-content specified': true, 'change-z-index': tabChange }">
-      选定日期的事项
-    </div>
-    <div class="todolist-content general">
-      <div v-for="i in 2" :key="i" class="todolist-item-inform todolist-item">
-        <img src="../assets/message.svg" alt="" />
-        <div class="todolist-item-content">
-          <p>2024/5/15 8:30</p>
-          <div>活动“XXXX”审核中...</div>
+    <div class="todolist-scroll-frame">
+      <div class="todolist-scroll">
+        <div :class="{ 'todolist-content specified': true }"></div>
+        <div class="todolist-content general">
+          <TodoListItem v-for="item in mockMessageList" v-bind="item" :key="item.time" />
         </div>
       </div>
-      <div v-for="i in 2" :key="i" class="todolist-item-todo todolist-item">
-        <img src="../assets/message.svg" alt="" />
-        <div class="todolist-item-content">
-          <p>2024/5/15 8:30</p>
-          <div>活动“XXXX”审核中...</div>
+    </div> -->
+    <div class="todolist-frame">
+      <div class="todolist-header">
+        <div class="header-front">
+          待办
+          <img src="../assets/todo.svg" alt="" />
+        </div>
+        <img class="todo-word" src="../assets/todo_word.svg" alt="" />
+      </div>
+      <div class="todolist-content">
+        <div class="todolist-add">
+          <div
+            @click="() => (addTodolist = !addTodolist)"
+            :class="{ button: true, 'button-form': addTodolist }"
+          >
+            新建
+          </div>
+          <div :class="{ 'todolist-form': true, 'form-close': !addTodolist }">
+            <div class="todolist-form-content"></div>
+          </div>
+        </div>
+        <div class="todolist-scroll">
+          <TodoListItem v-for="item in mockMessageList" v-bind="item" :key="item.time" />
         </div>
       </div>
     </div>
@@ -30,96 +42,129 @@
 .todolist-main-container {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: 4fr 5fr;
-  grid-template-rows: auto 1fr;
-  position: relative;
-  overflow: hidden;
-  column-gap: 10px;
+  padding: 0 @user-padding;
 
-  .change-z-index {
-    z-index: 2;
-  }
-
-  .specified {
-    background-color: #eee;
-  }
-
-  .general {
-    z-index: 1;
-    background-color: #ddd;
-  }
-
-  .todolist-content {
+  .todolist-frame {
+    background-color: @todolist-bg-color;
+    height: 100%;
     width: 100%;
-    border-radius: 0 0 6px 6px;
-    padding: 10px;
-    overflow-y: scroll;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    padding-bottom: 10px;
+    grid-template-rows: auto 1fr;
 
-    .todolist-item-todo {
-      border: 2px solid @theme-color;
-      background-color: @theme-color;
-    }
-
-    .todolist-item-inform {
-      border: 2px solid @theme-black;
-      background-color: @theme-black;
-    }
-
-    .todolist-item {
-      height: 60px;
-      border-radius: @header-border-radius;
-      margin: 0 0 10px 0;
+    .todolist-content {
+      width: 100%;
+      height: 100%;
+      padding: 0 10px;
+      overflow: hidden;
+      transition: 500ms;
       display: grid;
-      align-items: center;
-      grid-template-columns: 60px 1fr;
-      justify-items: center;
+      border-radius: 0 0 6px 6px;
+      grid-template-rows: auto 1fr;
 
-      .todolist-item-content {
+      .todolist-add {
+        overflow: hidden;
+        transition: 500ms;
+        position: relative;
+
+        .button {
+          width: 100%;
+          background-color: #919191;
+          text-align: center;
+          border-radius: 6px 6px 0 0;
+          padding: 5px;
+          color: #fff;
+          cursor: pointer;
+        }
+
+        .todolist-form {
+          background-color: #919191;
+          border-radius: 0 0 6px 6px;
+          transition: 500ms;
+          height: 295px;
+
+          .todolist-form-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 3px;
+          }
+        }
+
+        .form-close {
+          height: 0;
+        }
+      }
+
+      .todolist-scroll {
         height: 100%;
-        border-radius: 3px 8px 3px 8px;
-        padding: 0 5px;
-        background-color: #fff;
-        display: grid;
-        grid-template-rows: auto 1fr;
-        align-items: center;
         width: 100%;
-        p {
-          font-size: 16px;
+        background-color: @todolist-scroll-frame-color;
+        transition: 500ms;
+        overflow-y: scroll;
+        border-radius: 0 0 6px 6px;
+      }
+
+      .todolist-scroll::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .todolist-header {
+      height: 60px;
+      padding-left: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      justify-content: space-between;
+      position: relative;
+      color: @todolist-header-font-color;
+      font-size: 36px;
+      font-weight: 600;
+
+      .todo-word {
+        height: 120px;
+        transform: translate(10px, 10px);
+      }
+
+      .header-front {
+        display: flex;
+        align-items: center;
+
+        img {
+          rotate: 3deg;
+          height: 48px;
         }
       }
     }
   }
 
-  @media (max-width: 1200px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "a b"
-      "c c";
-    column-gap: 0;
+  // @media (max-width: 1200px) {
 
-    .todolist-content {
-      grid-area: c;
-    }
+  //   .todolist-content {
+  //     grid-area: c;
+  //   }
 
-    .specified {
-      border-radius: 0 6px 6px 6px;
-    }
+  //   .specified {
+  //     border-radius: 0 6px 6px 6px;
+  //   }
 
-    .general {
-      border-radius: 6px 0 6px 6px;
-    }
+  //   .general {
+  //     border-radius: 6px 0 6px 6px;
+  //   }
 
-    .todolist-tab {
-      cursor: pointer;
-    }
-  }
+  //   .todolist-tab {
+  //     cursor: pointer;
+  //   }
+  // }
 
   .todolist-tab {
     border-radius: 6px 6px 0 0;
     padding: 5px;
+    font-size: 24px;
     user-select: none;
   }
 }
@@ -127,6 +172,41 @@
 
 <script setup>
 import { ref } from "vue";
+import TodoListItem from "../components/TodoListItem.vue";
 
 const tabChange = ref(false);
+const addTodolist = ref(false);
+
+const mockMessageList = ref([
+  {
+    time: "2024/5/17 15:49",
+    content: "活动“XXXXX”审核中",
+    type: "waiting",
+    link: "",
+  },
+  {
+    time: "2024/5/17 18:30",
+    content: "有新的报销申请",
+    type: "link",
+    link: "",
+  },
+  {
+    time: "2024/5/17 18:30",
+    content: "有新的报销申请",
+    type: "link",
+    link: "",
+  },
+  {
+    time: "2024/5/17 18:30",
+    content: "有新的报销申请",
+    type: "link",
+    link: "",
+  },
+  {
+    time: "2024/5/17 21:00",
+    content: "活动“XXXX”未通过审核",
+    type: "error",
+    link: "",
+  },
+]);
 </script>
