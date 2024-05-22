@@ -37,8 +37,10 @@
 .calendar-main-container {
   width: 100%;
   padding: 10px;
+  background-color: #fff;
   height: 100%;
   display: grid;
+  border-radius: @user-item-border-radius-sub;
   grid-template-rows: auto 1fr;
   user-select: none;
 

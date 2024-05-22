@@ -42,13 +42,12 @@
 .todolist-main-container {
   width: 100%;
   height: 100%;
-  padding: 0 @user-padding;
+  border-radius: @user-item-border-radius-sub;
+  background-color: #fff;
 
   .todolist-frame {
-    background-color: @todolist-bg-color;
     height: 100%;
     width: 100%;
-    border-radius: 6px;
     position: relative;
     overflow: hidden;
     display: grid;
@@ -84,7 +83,7 @@
           background-color: #919191;
           border-radius: 0 0 6px 6px;
           transition: 500ms;
-          height: 295px;
+          height: 300px;
 
           .todolist-form-content {
             width: 100%;
@@ -99,9 +98,11 @@
       }
 
       .todolist-scroll {
+        position: relative;
         height: 100%;
         width: 100%;
-        background-color: @todolist-scroll-frame-color;
+        border: 1px solid #eee;
+        background-color: #fff;
         transition: 500ms;
         overflow-y: scroll;
         border-radius: 0 0 6px 6px;
@@ -115,7 +116,6 @@
     .todolist-header {
       height: 60px;
       padding-left: 10px;
-      margin-bottom: 5px;
       display: flex;
       align-items: center;
       user-select: none;

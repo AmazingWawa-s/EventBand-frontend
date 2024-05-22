@@ -185,7 +185,7 @@ const isSlide = ref(false);
 }
 
 .animation1_2 {
-  transform: translateY(-420px);
+  transform: translateY(-425px);
 }
 
 .animation3_2 {

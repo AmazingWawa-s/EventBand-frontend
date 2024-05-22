@@ -72,6 +72,7 @@
   justify-content: space-between;
   align-items: center;
   user-select: none;
+  background-color: #fff;
   border-bottom: @header-border-bottom;
 
   .appear {

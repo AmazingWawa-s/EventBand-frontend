@@ -10,7 +10,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #fff;
+  background-color: rgb(244, 245, 247);
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;

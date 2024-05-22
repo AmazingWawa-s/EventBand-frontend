@@ -15,16 +15,12 @@
           }"
         >
           <div class="grid-events-create">
-            <div class="grid-events-sub-frame">
-              <!-- <div class="grid-events-square2"></div> -->
-              <EventCreateForm />
-            </div>
+            <!-- <div class="grid-events-square2"></div> -->
+            <EventCreateForm />
           </div>
           <div class="grid-events-list">
-            <div class="grid-events-sub-frame">
-              <!-- <div class="grid-events-square1"></div> -->
-              <EventList />
-            </div>
+            <!-- <div class="grid-events-square1"></div> -->
+            <EventList />
           </div>
         </div>
       </div>
@@ -54,10 +50,7 @@
   overflow: hidden;
 
   .grid-item {
-    border-radius: @user-item-border-radius;
-    // border: @user-item-border;
     overflow: hidden;
-    background-color: @user-item-bgc;
   }
 
   .grid-calendar {
@@ -74,16 +67,14 @@
     display: grid;
     overflow: hidden;
     gap: @user-gap;
-    padding: @user-padding;
     grid-template-columns: 1fr auto;
 
     .grid-events-frame {
       width: 100%;
       height: 100%;
-
       position: relative;
       overflow: hidden;
-      border-radius: @user-item-border-radius;
+      border-radius: @user-item-border-radius-sub;
 
       .grid-events-frame-scroll {
         position: absolute;
@@ -91,45 +82,18 @@
         height: 100%;
         left: -100%;
         transition: 500ms;
-        background-color: #ddd;
+        background-color: #fff;
         display: grid;
         grid-template-columns: 1fr 1fr;
 
         .grid-events-list {
-          border-radius: @user-item-border-radius;
-          background-color: #ddd;
+          // border-radius: @user-item-border-radius;
+          // background-color: #ddd;
         }
 
         .grid-events-create {
-          background-color: #ddd;
-          border-radius: @user-item-border-radius;
-        }
-
-        .grid-events-sub-frame {
-          position: relative;
-          height: 100%;
-          width: 100%;
-          box-shadow: 0 0 0 10px #ddd inset;
-          background-color: #eee;
-          border-radius: 16px;
-          padding: 10px;
-
-          .grid-events-square1 {
-            position: absolute;
-            background-color: #ddd;
-            width: 50px;
-            height: 50px;
-            border-radius: 0 0 30px 0;
-          }
-
-          .grid-events-square2 {
-            position: absolute;
-            background-color: #ddd;
-            width: 50px;
-            height: 50px;
-            left: calc(100% - 60px);
-            border-radius: 0 0 0 30px;
-          }
+          // background-color: #ddd;
+          // border-radius: @user-item-border-radius;
         }
       }
 
@@ -151,6 +115,7 @@
       border-radius: @user-item-border-radius-sub;
       font-size: 30px;
       height: 100%;
+      align-self: flex-end;
       width: 200px;
       height: 386px;
     }

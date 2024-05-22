@@ -29,11 +29,6 @@
 </template>
 
 <style lang="less" scoped>
-.todo {
-  border: 2px solid @theme-color;
-  background-color: @theme-color;
-}
-
 .inform {
   // border: 2px solid @theme-black;
   // background-color: @theme-black;
@@ -42,19 +37,19 @@
 .todolist-item {
   cursor: pointer;
   user-select: none;
-  height: 60px;
   display: grid;
-  padding: 5px 10px;
+  border-top: 1px solid #eee;
+  padding: 10px 10px;
   align-items: center;
   // background-color: rgb(255, 255, 255);
   grid-template-columns: 5px 1fr;
   justify-items: center;
+  transition: 300ms;
 
   .todolist-item-body {
     height: 100%;
     width: 100%;
     display: grid;
-    border-radius: 3px 8px 3px 8px;
     grid-template-columns: 1fr auto;
     align-items: center;
 
@@ -78,7 +73,7 @@
 }
 
 .todolist-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(96, 96, 96, 0.1);
 }
 </style>
 
