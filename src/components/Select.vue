@@ -1,12 +1,37 @@
 <template>
   <div class="select-main-container">
-    <div @click="() => (selectOpen = !selectOpen)" class="select-show">
-      <div class="time-list">5/20 12:40</div>
-      <div class="select-button">▼</div>
+    <div class="select-header">
+      人数：
+      <div class="select-slide">
+        <div
+          v-for="(item, i) in scaleList"
+          :class="{ 'scale-selected': i == selectScale, 'scale-item': true }"
+          @click="() => (selectScale = i)"
+          :key="i"
+        >
+          {{ i == selectScale ? item : "" }}
+        </div>
+      </div>
     </div>
-    <div :class="{ 'select-window': true, 'select-window-open': selectOpen }">
-      <div class="select-title1">日期</div>
-      <div class="select-title2">时间段</div>
+    <div class="select-body">
+      <div class="place-menu">
+        <div
+          :class="{ 'menu-item': true, 'menu-selected': i == selectMenu }"
+          v-for="(item, i) in placeMenu"
+          :key="item"
+          @click="() => (selectMenu = i)"
+        >
+          <span class="menu-item-count"></span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+      <div class="select-content">
+        <div class="content-item">任意</div>
+        <div class="content-item" v-for="item in placeContents[selectMenu]" :key="item">
+          {{ item }}
+        </div>
+        <div class="content-item content-item-selected">605</div>
+      </div>
     </div>
   </div>
 </template>
@@ -14,102 +39,147 @@
 <style lang="less" scoped>
 .select-main-container {
   width: 100%;
+  height: 100%;
   position: relative;
-}
-
-.select-window {
-  position: absolute;
-  overflow: hidden;
-  height: 0;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 0 2px #666 inset;
-  transition: 300ms;
+  user-select: none;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  overflow: hidden;
   gap: 5px;
-  align-items: center;
-  justify-items: center;
-  z-index: @z-index-body+2;
   grid-template-rows: auto 1fr;
 
-  .select-title1 {
-    grid-column: 1/3;
-    padding-top: 5px;
-  }
-
-  .select-title2 {
-    padding-top: 5px;
-    grid-column: 3/5;
-  }
-
-  .select-scroll {
-    width: 100%;
-    position: relative;
-    display: grid;
-    grid-template-rows: repeat(5, 1fr);
-    justify-items: center;
+  .select-header {
     height: 100%;
-    flex-direction: column;
-    font-size: 20px;
-    padding: 0;
-    list-style-type: none;
+    border-radius: 5px;
+    height: 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
-    // background: linear-gradient(
-    //   0deg,
-    //   rgba(238, 238, 238, 1) 0%,
-    //   rgba(221, 221, 221, 0.4) 50%,
-    //   rgba(238, 238, 238, 1) 100%
-    // );
+    color: #fff;
+    background-color: #666;
+    padding: 0 5px;
 
-    .select-item {
-      cursor: pointer;
+    .select-slide {
+      display: grid;
       width: 100%;
-      text-align: center;
-      user-select: none;
+      height: 100%;
+      grid-template-columns: repeat(6, 1fr);
+      padding: 5px 0;
+      align-items: center;
+      justify-items: center;
+      position: relative;
+    }
+
+    .select-slide::after {
+      position: absolute;
+      width: 80%;
+      height: 3px;
+      content: "";
+      background-color: #fff;
+      z-index: 0;
+    }
+
+    .scale-item {
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      background-color: #fff;
+      border-radius: 50%;
+      width: 15px;
+      height: 15px;
+      transition: 200ms;
+      display: flex;
+      font-size: 14px;
+      color: #666;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scale-selected {
+      border-radius: 5px;
+      font-weight: 600;
+      width: 100%;
+      height: 100%;
     }
   }
 
-  .select-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .select-title {
-    padding-top: 5px;
-  }
-}
-
-.select-window-open {
-  height: 180px;
-}
-
-.select-show {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  margin-top: 5px;
-  border: 1px solid #ddd;
-  width: 100%;
-  cursor: pointer;
-  align-items: center;
-  height: 32px;
-  font-size: 18px;
-
-  .time-list {
-    padding: 0 5px;
-  }
-
-  .select-button {
+  .select-body {
     height: 100%;
-    display: flex;
-    padding: 0 5px;
-    align-items: center;
-    border-left: 1px solid #ddd;
-  }
-}
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: #fff;
+    // border: 1px solid #ddd;
+    padding: 5px;
 
-.select-main-container:hover {
-  .select-show {
-    background-color: #eee;
+    .place-menu {
+      overflow-y: scroll;
+      height: 100%;
+      width: 100%;
+      flex-direction: column;
+
+      .menu-item {
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        border-radius: 16px 0 0 16px;
+
+        .menu-item-count {
+          border-radius: 50%;
+          height: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 16px;
+          background-color: #eee;
+          font-size: 10px;
+          font-weight: 100;
+        }
+      }
+
+      .menu-selected {
+        background-color: #ddd;
+        font-weight: 600;
+
+        .menu-item-count {
+          background-color: #fff;
+        }
+      }
+    }
+
+    .place-menu::-webkit-scrollbar {
+      display: none;
+    }
+
+    .select-content {
+      background-color: #ddd;
+      height: 100%;
+      width: 100%;
+      padding: 5px;
+      display: flex;
+      align-items: flex-start;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      overflow-y: scroll;
+      gap: 5px;
+
+      .content-item {
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: #fff;
+        padding: 5px;
+        position: relative;
+      }
+
+      .content-item-selected {
+        background: center/100% no-repeat url("../assets/select.svg") #fff;
+      }
+    }
+
+    .select-content::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>
@@ -117,35 +187,33 @@
 <script setup>
 import { computed, ref } from "vue";
 
-const selectIndex = ref(0);
-const selectIndex_2 = ref(0);
-const selectDate1 = computed(() => {
-  return selectArr.value[selectIndex.value];
-});
-const selectDate2 = ref("");
-const selectTime1 = ref("");
-const selectTime2 = ref("");
+const selectScale = ref(0);
 
-const changeSelect = (select, index) => {
-  if (select + index > 0 && select + index < selectArr.value.length) {
-    select += index;
-  }
-};
-
-const selectArr = ref([
-  "--",
-  "5/20",
-  "5/21",
-  "5/22",
-  "5/23",
-  "5/24",
-  "5/25",
-  "5/26",
-  "5/27",
-  "5/28",
-  "5/29",
-  "5/30",
-  "5/31",
+const placeMenu = ref([
+  "逸夫楼",
+  "机电楼",
+  "教职工礼堂",
+  "经管楼",
+  "操场",
+  "体育馆",
+  "学活中心",
 ]);
-const selectOpen = ref(false);
+
+const placeSelected = ref([]);
+
+const placeContents = ref([
+  ["101", "201", "301", "401", "501", "601", "701"],
+  ["101", "201", "301", "401"],
+  ["教职工礼堂"],
+  ["101", "201", "301", "401"],
+  ["操场"],
+  ["篮球场", "会议室101", "会议室102"],
+  ["101", "201", "301", "401"],
+]);
+
+const selectMenu = ref(0);
+
+const scaleList = ref(["×", "1~5", "5~10", "10~30", "30~50", "50+"]);
+
+const selectContent = ref([]);
 </script>

@@ -1,7 +1,9 @@
 <template>
   <div class="application">
     <Header />
-    <router-view />
+    <div class="main-view">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -10,12 +12,18 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: rgb(244, 245, 247);
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;
   justify-items: center;
   color: #333333;
+}
+
+.main-view {
+  overflow: hidden;
+  height: 100%;
+  background-color: @theme-bg;
+  width: 100%;
 }
 
 * {

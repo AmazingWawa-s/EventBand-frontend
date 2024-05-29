@@ -3,20 +3,24 @@
     <div class="ecform-body">
       <div class="ecform-name ecform-item">
         <text>活动名称</text>
-        <input type="text" />
+        <input v-model="eventName" type="text" />
       </div>
       <div class="ecform-info ecform-item">
         <text>活动说明</text>
-        <textarea />
+        <textarea v-model="eventInfo" />
       </div>
       <div class="ecform-time ecform-item">
         时间偏好
         <Picker />
       </div>
-      <div class="ecform-place">地点偏好</div>
+      <div class="ecform-place ecform-item">
+        地点偏好
+        <Select />
+      </div>
     </div>
     <div class="ecform-bottom ecform-item">
-      <div>申请</div>
+      <div>"※" 标注为必填项</div>
+      <div class="form-commit" @click="createEvent">申请</div>
     </div>
   </div>
 </template>
@@ -27,8 +31,9 @@
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
-  padding: 10px 10px;
+  padding: 10px;
   font-size: 16px;
+  gap: 5px;
   overflow: hidden;
   color: #666;
 
@@ -74,6 +79,11 @@
 
     .ecform-name {
       grid-area: a;
+
+      text:after {
+        content: " ※";
+        color: @theme-color;
+      }
     }
 
     .ecform-time {
@@ -87,6 +97,7 @@
     }
 
     .ecform-place {
+      overflow: hidden;
       position: relative;
       grid-area: c;
     }
@@ -96,6 +107,7 @@
       display: grid;
       overflow: hidden;
       grid-template-rows: auto 1fr;
+
       textarea {
         box-sizing: border-box;
         width: 100%;
@@ -103,12 +115,17 @@
         outline: none;
         resize: none;
       }
+
+      text:after {
+        content: " ※";
+        color: @theme-color;
+      }
     }
   }
 
   @media (max-width: 1200px) {
     .ecform-body {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 3fr 4fr;
       height: 100%;
       width: 100%;
       overflow: hidden;
@@ -126,9 +143,12 @@
 
   .ecform-bottom {
     display: flex;
+    overflow: hidden;
     align-items: center;
-    justify-content: flex-end;
-    div {
+    justify-content: space-between;
+    color: @theme-color;
+
+    .form-commit {
       background-color: #333;
       color: #fff;
       font-size: 20px;
@@ -144,4 +164,13 @@
 import Input from "../components/Input.vue";
 import Button from "../components/Button.vue";
 import Picker from "../components/Picker.vue";
+import Select from "../components/Select.vue";
+import { ref } from "vue";
+
+const eventInfo = ref("");
+const eventName = ref("");
+const eventTime = ref("");
+const eventPlace = ref("");
+
+const createEvent = () => {};
 </script>

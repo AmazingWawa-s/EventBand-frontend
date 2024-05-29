@@ -26,12 +26,22 @@
           >
             新建
           </div>
-          <div :class="{ 'todolist-form': true, 'form-close': !addTodolist }">
-            <div class="todolist-form-content"></div>
-          </div>
         </div>
-        <div class="todolist-scroll">
-          <TodoListItem v-for="item in mockMessageList" v-bind="item" :key="item.time" />
+        <div class="todolist-sub-frame">
+          <div :class="{ 'todolist-form': true, 'form-close': !addTodolist }">
+            <div class="todolist-form-content">
+              <textarea class="title"></textarea>
+              <div class="type">类型</div>
+              <div class="add">添加</div>
+            </div>
+          </div>
+          <div class="todolist-scroll">
+            <TodoListItem
+              v-for="item in mockMessageList"
+              v-bind="item"
+              :key="item.time"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -41,6 +51,7 @@
 <style lang="less" scoped>
 .todolist-main-container {
   width: 100%;
+  overflow: hidden;
   height: 100%;
   border-radius: @user-item-border-radius-sub;
   background-color: #fff;
@@ -54,6 +65,12 @@
     padding-bottom: 10px;
     grid-template-rows: auto 1fr;
 
+    .todolist-sub-frame {
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+    }
+
     .todolist-content {
       width: 100%;
       height: 100%;
@@ -64,9 +81,57 @@
       border-radius: 0 0 6px 6px;
       grid-template-rows: auto 1fr;
 
-      .todolist-add {
-        overflow: hidden;
+      .todolist-form {
+        background-color: #919191;
+        border-radius: 0 0 6px 6px;
         transition: 500ms;
+        overflow: hidden;
+        height: 100%;
+
+        .todolist-form-content {
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          display: grid;
+          padding: 0 10px 10px 10px;
+          gap: 5px;
+          grid-template-areas:
+            "a a a"
+            "a a a"
+            "b b c";
+
+          .title {
+            outline: none;
+            border-radius: 3px;
+            resize: none;
+            grid-area: a;
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 5px;
+            overflow: hidden;
+            box-sizing: border-box;
+          }
+
+          .type {
+            width: 100%;
+            height: 100%;
+            grid-area: b;
+            background-color: #fff;
+          }
+
+          .add {
+            background-color: #fff;
+            grid-area: c;
+          }
+        }
+      }
+
+      .form-close {
+        height: 0;
+      }
+
+      .todolist-add {
         position: relative;
 
         .button {
@@ -77,23 +142,6 @@
           padding: 5px;
           color: #fff;
           cursor: pointer;
-        }
-
-        .todolist-form {
-          background-color: #919191;
-          border-radius: 0 0 6px 6px;
-          transition: 500ms;
-          height: 300px;
-
-          .todolist-form-content {
-            width: 100%;
-            height: 100%;
-            border-radius: 3px;
-          }
-        }
-
-        .form-close {
-          height: 0;
         }
       }
 
@@ -109,7 +157,7 @@
       }
 
       .todolist-scroll::-webkit-scrollbar {
-        display: none;
+        // display: none;
       }
     }
 
@@ -200,6 +248,12 @@ const mockMessageList = ref([
     time: "2024/5/17 18:30",
     content: "有新的报销申请",
     type: "link",
+    link: "",
+  },
+  {
+    time: "2024/5/17 21:00",
+    content: "活动“XXXX”未通过审核",
+    type: "error",
     link: "",
   },
   {

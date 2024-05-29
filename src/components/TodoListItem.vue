@@ -1,6 +1,8 @@
 <template>
-  <div :class="{ inform: true, 'todolist-item': true }">
-    <div></div>
+  <div
+    @click="() => (showDetail = !showDetail)"
+    :class="{ inform: true, 'todolist-item': true }"
+  >
     <div class="todolist-item-body">
       <div class="todolist-item-content">
         <p>{{ time }}</p>
@@ -26,6 +28,13 @@
       />
     </div>
   </div>
+  <div
+    v-if="details"
+    class="todolist-item-detail"
+    :style="{ height: showDetail ? '100px' : 0 }"
+  >
+    <div>详情</div>
+  </div>
 </template>
 
 <style lang="less" scoped>
@@ -37,13 +46,8 @@
 .todolist-item {
   cursor: pointer;
   user-select: none;
-  display: grid;
   border-top: 1px solid #eee;
   padding: 10px 10px;
-  align-items: center;
-  // background-color: rgb(255, 255, 255);
-  grid-template-columns: 5px 1fr;
-  justify-items: center;
   transition: 300ms;
 
   .todolist-item-body {
@@ -72,11 +76,27 @@
   }
 }
 
+.todolist-item-detail {
+  overflow: hidden;
+  transition: 300ms;
+
+  div {
+    margin: 0 0 0 10px;
+    // background-color: #eee;
+    box-shadow: 1px 0 2px #ddd inset;
+    height: 100%;
+  }
+}
+
 .todolist-item:hover {
   background-color: rgba(96, 96, 96, 0.1);
 }
 </style>
 
 <script setup>
-const props = defineProps(["time", "content", "type"]);
+import { ref } from "vue";
+
+const props = defineProps(["time", "content", "type", "details"]);
+
+const showDetail = ref(false);
 </script>

@@ -81,19 +81,17 @@
         width: 200%;
         height: 100%;
         left: -100%;
-        transition: 500ms;
         background-color: #fff;
+        transition: 500ms;
         display: grid;
         grid-template-columns: 1fr 1fr;
 
         .grid-events-list {
-          // border-radius: @user-item-border-radius;
-          // background-color: #ddd;
+          overflow: hidden;
         }
 
         .grid-events-create {
-          // background-color: #ddd;
-          // border-radius: @user-item-border-radius;
+          overflow: hidden;
         }
       }
 

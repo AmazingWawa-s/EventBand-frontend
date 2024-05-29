@@ -1,14 +1,21 @@
 <template>
   <div class="m-budgets-main-container">
-    <div class="budgets-header">经费管理</div>
+    <div class="budgets-header">
+      经费管理
+      <div>
+        <span>经费报销</span>
+      </div>
+    </div>
     <div class="budgets-body">
       <div class="budgets-total">
         <span>total:</span>
         <span class="budgets-num">1200</span>
-        <span class="budgets-num2">/2000</span>
       </div>
-      <div class="budgets-graph">
-        <div class="budgets-item" v-for="i in 100" :key="i"></div>
+      <div class="budgets-bottom">
+        <div class="budgets-graph">
+          <div class="budgets-item" v-for="i in 100" :key="i"></div>
+        </div>
+        <div class="budgets-detail-button">详情</div>
       </div>
     </div>
   </div>
@@ -31,6 +38,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    div {
+      span {
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+    }
   }
 
   .budgets-body {
@@ -54,15 +69,34 @@
       }
     }
 
-    .budgets-graph {
+    .budgets-bottom {
+      height: 100%;
+      width: 100%;
       display: grid;
-      gap: 2px;
-      grid-template-columns: repeat(20, 1fr);
-      grid-template-rows: repeat(5, 1fr);
+      grid-template-columns: 1fr auto;
+      gap: 5px;
 
-      .budgets-item {
+      .budgets-graph {
+        display: grid;
+        gap: 2px;
+        grid-template-columns: repeat(20, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+
+        .budgets-item {
+          background-color: #eee;
+          border-radius: 2px;
+        }
+      }
+
+      .budgets-detail-button {
+        font-size: 16px;
+        border-radius: 5px;
         background-color: #eee;
-        border-radius: 2px;
+        padding: 5px;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
       }
     }
   }

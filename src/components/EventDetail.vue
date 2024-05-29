@@ -17,14 +17,11 @@
     <div class="module-frame participants">
       <MParticipants />
     </div>
-    <div class="module-frame budgets"></div>
-    <div class="module-frame feedback">活动反馈模块</div>
+    <div class="module-frame feedback"></div>
   </div>
 </template>
 
 <style lang="less" scoped>
-@border-radius-L: 10px;
-
 .eventdetail-main-container {
   position: relative;
   z-index: @z-index-body;
@@ -40,15 +37,15 @@
   grid-template-areas:
     "a a a a b b"
     "a a a a b b"
-    "c c c d d d"
+    "c c c e e e"
     "c c c e e e";
   gap: @event-detail-gap;
 
   .module-frame {
-    border-radius: @border-radius-L;
+    border-radius: @user-item-border-radius-sub;
     background-color: #fff;
     width: 100%;
-    border: 1px solid #eee;
+    // border: 1px solid #eee;
     overflow: hidden;
     height: 100%;
   }
