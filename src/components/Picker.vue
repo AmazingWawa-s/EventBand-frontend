@@ -140,7 +140,6 @@
       width: 5px;
       height: 100%;
       background-color: #eee;
-      border-radius: 10px;
     }
   }
 
@@ -187,7 +186,7 @@
     position: absolute;
     z-index: 100;
     pointer-events: none;
-    box-shadow: 0 10px 11px -10px #ddd inset, 0 -10px 11px -10px #ddd inset;
+    box-shadow: 0 10px 11px -10px #ccc inset, 0 -10px 11px -10px #ccc inset;
   }
 
   .picker-scroll::-webkit-scrollbar {

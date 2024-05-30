@@ -17,7 +17,9 @@
     <div class="module-frame participants">
       <MParticipants />
     </div>
-    <div class="module-frame feedback"></div>
+    <div class="module-frame feedback">
+      
+    </div>
   </div>
 </template>
 
@@ -96,4 +98,11 @@ import MInfo from "../components/MInfo.vue";
 import { ref } from "vue";
 
 const filterOn = ref(false);
+
+// const eventData = ref({
+//   title: "“书香四月 向美而行”2024年读者嘉年华活动",
+//   info: "",
+//   place: "无锡市图书馆",
+//   org: "无锡市图书馆",
+// });
 </script>

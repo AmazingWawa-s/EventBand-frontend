@@ -1,41 +1,59 @@
 <template>
   <div class="m-participants-main-container">
-    <div class="participants-header">
-      <div class="front">成员列表</div>
-      <div class="end">
-        <div class="icon">
-          <img src="../assets/sift.svg" alt="" />
-          |
-        </div>
-        <div class="condition">{{ condition }}</div>
-        <div class="drop-menu">
-          <div @click="() => (condition = item)" v-for="item in dropMenu" :key="item">
-            {{ item }}
+    <div class="participants-header-frame">
+      <div class="participants-header">
+        <div class="front">成员列表</div>
+        <div class="end">
+          <div class="button" @click="editActive = !editActive">
+            <SquarePen :size="16" />编辑
           </div>
+          <div class="button" @click="siftButton = !siftButton">
+            <div class="icon">
+              <img src="../assets/sift.svg" alt="" />
+              |
+            </div>
+            <div class="condition">{{ condition }}</div>
+          </div>
+        </div>
+      </div>
+      <div :class="{ 'participants-sift': true, 'sift-close': !siftButton }">
+        <div
+          class="sift-item"
+          v-for="item in dropMenu"
+          @click="
+            condition = item;
+            siftButton = false;
+          "
+          :key="item"
+        >
+          {{ item }}
         </div>
       </div>
     </div>
     <div class="participants-body">
       <div class="participants-contents">
-        <div class="participants-item grid-title">
-          <div class="">成员</div>
-          <div>分组</div>
-          <div></div>
-          <div></div>
-        </div>
-        <div v-for="item in participants" class="participants-item" :key="item">
+        <div
+          v-show="condition == '全部' || condition == item.group"
+          v-for="item in participants"
+          class="participants-item"
+          :key="item"
+        >
           <div class="">{{ item.name }}</div>
-          <div>{{ item.group }}</div>
-          <div class="contact">
-            <img src="../assets/message.svg" alt="" />
+          <div><Users :size="18" />{{ item.group }}</div>
+          <div class="button">
+            <Mail :size="18" />
           </div>
-          <div class="edit">
-            <img src="../assets/edit.svg" alt="" />
+          <div :class="{ button: true, hidden: !editActive }">
+            <CircleX color="#c1272d" :size="18" />
           </div>
         </div>
       </div>
     </div>
-    <div class="participants-bottom">参与方式：自由参加/报名参加</div>
+    <div class="participants-bottom">
+      <div class="bottom-item invite"><UserRoundPlus :size="20" />邀请</div>
+      <div class="bottom-item new"><Users :size="20" />新建分组</div>
+      <div class="setting"></div>
+    </div>
   </div>
 </template>
 
@@ -48,52 +66,66 @@
   padding: 10px;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  gap: 10px;
   user-select: none;
   overflow: hidden;
 
-  .participants-header {
-    font-weight: 600;
-    margin-bottom: 10px;
+  .participants-sift {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    transition: 500ms;
+    width: 100%;
+    gap: 5px;
+    max-height: 500px;
+    flex-wrap: wrap;
+    overflow: hidden;
 
-    .end {
+    .sift-item {
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      padding: 5px;
+      cursor: pointer;
+    }
+  }
+
+  .sift-close {
+    max-height: 0;
+  }
+
+  .participants-header-frame {
+    .participants-header {
+      margin-bottom: 5px;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
-      border: 2px solid #333;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 5px;
-      padding: 5px;
-      cursor: pointer;
 
-      .icon {
+      .end {
         display: flex;
+        gap: 5px;
         align-items: center;
-      }
+        justify-content: space-between;
 
-      img {
-        width: 16px;
-      }
-
-      .drop-menu {
-        position: absolute;
-        top: 100%;
-        overflow: hidden;
-        height: 0;
-        border: 2px #333 solid;
-        background-color: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        div {
+        .button {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          border: 2px solid #333;
+          font-size: 16px;
+          font-weight: 500;
+          border-radius: 5px;
           padding: 5px;
-        }
+          cursor: pointer;
 
-        div:hover {
+          .icon {
+            display: flex;
+            align-items: center;
+          }
+
+          img {
+            width: 16px;
+          }
         }
       }
     }
@@ -102,33 +134,44 @@
   .participants-body {
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
     font-size: 18px;
-    background-color: #eee;
-    padding: 10px;
-    border-radius: 5px;
+    overflow: hidden;
 
     .participants-contents {
       width: 100%;
       display: grid;
+      padding-right: 5px;
+      height: 100%;
+      overflow-y: scroll;
       grid-template-columns: 3fr 2fr auto auto;
-      column-gap: 5px;
-      row-gap: 10px;
-
-      .menu-head {
-        font-weight: 600;
-      }
+      column-gap: 10px;
+      grid-auto-rows: 22px;
+      row-gap: 15px;
 
       .participants-item {
         width: 100%;
         display: grid;
+        transition: 300ms;
+        border-bottom: 2px dashed #eee;
+        padding-bottom: 2px;
         grid-column: 1/5;
         grid-template-columns: subgrid;
         align-items: center;
 
-        img {
-          width: 18px;
+        .button {
           cursor: pointer;
+          transition: 300ms;
+          max-width: 16px;
+        }
+
+        .hidden {
+          max-width: 0;
+        }
+
+        div {
+          display: flex;
+          align-items: center;
+          gap: 2px;
         }
       }
 
@@ -139,8 +182,50 @@
   }
 
   .participants-bottom {
-    margin-top: 10px;
-    font-size: 16px;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-areas: "c a b ";
+    gap: 10px;
+
+    .bottom-item {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border-radius: 5px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 10px 5px;
+    }
+
+    .invite {
+      grid-area: a;
+      background-color: #666;
+      color: #fff;
+    }
+
+    .new {
+      grid-area: b;
+      background-color: #fff;
+      border: 2px solid #666;
+      color: #666;
+    }
+
+    .setting {
+      grid-area: c;
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .participants-bottom {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "c c"
+        "a b";
+    }
   }
 }
 
@@ -150,9 +235,18 @@
 </style>
 
 <script setup>
+import { UserRoundPlus } from "lucide-vue-next";
+import { Users } from "lucide-vue-next";
+import { SquarePen } from "lucide-vue-next";
+import { Mail } from "lucide-vue-next";
+import { CircleX } from "lucide-vue-next";
 import { ref } from "vue";
 
 const condition = ref("全部");
+
+const editActive = ref(false);
+
+const siftButton = ref(false);
 
 const dropMenu = ref(["全部", "参与者", "管理员", "志愿者", "活动负责人"]);
 
@@ -170,6 +264,31 @@ const participants = ref([
   {
     name: "小刚",
     group: "志愿者",
+    id: "123456",
+  },
+  {
+    name: "小兵",
+    group: "志愿者",
+    id: "123456",
+  },
+  {
+    name: "小李",
+    group: "管理员",
+    id: "123456",
+  },
+  {
+    name: "小兵",
+    group: "志愿者",
+    id: "123456",
+  },
+  {
+    name: "小兵",
+    group: "志愿者",
+    id: "123456",
+  },
+  {
+    name: "小勇",
+    group: "活动负责人",
     id: "123456",
   },
   {

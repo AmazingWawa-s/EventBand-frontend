@@ -12,9 +12,9 @@
         <span class="budgets-num">1200</span>
       </div>
       <div class="budgets-bottom">
-        <div class="budgets-graph">
+        <!-- <div class="budgets-graph">
           <div class="budgets-item" v-for="i in 100" :key="i"></div>
-        </div>
+        </div> -->
         <div class="budgets-detail-button">详情</div>
       </div>
     </div>

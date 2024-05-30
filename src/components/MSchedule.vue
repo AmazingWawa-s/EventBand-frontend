@@ -3,13 +3,36 @@
     <div class="schedule-header">
       <div class="front">活动日程表</div>
       <div class="end" @click="() => (addScheduleButton = !addScheduleButton)">
-        <div class="button-frame">+ 添加新日程</div>
+        <div class="button-frame"><CalendarPlus :size="16" />添加新日程</div>
       </div>
     </div>
     <div class="schedule-body">
-      <div
-        :class="{ 'schedule-add-frame': true, 'frame-close': !addScheduleButton }"
-      ></div>
+      <div :class="{ 'schedule-add-frame': true, 'frame-close': !addScheduleButton }">
+        <div class="schedule-form time">
+          <div>时间：</div>
+          <input type="text" />
+          <span>:</span>
+          <input type="text" />
+          <span>~</span>
+          <input type="text" />
+          <span>:</span>
+          <input type="text" />
+        </div>
+        <div class="schedule-form place">
+          具体地点：
+          <input type="text" />
+        </div>
+        <div class="schedule-form title">
+          标题：
+          <input type="text" />
+        </div>
+        <div class="schedule-form detail">
+          详情：
+          <textarea />
+        </div>
+        <div class="schedule-form participants">参与人员</div>
+        <div class="schedule-form button">确定</div>
+      </div>
       <div class="schedule-grid">
         <div class="grid-header">
           <div
@@ -32,7 +55,7 @@
                 {{ item.time1 + " ~ " + item.time2 }}
               </div>
               <div class="item-place">
-                <img src="../assets/place.svg" alt="" />
+                <MapPin :size="16" />
                 {{ item.place }}
               </div>
             </div>
@@ -81,6 +104,7 @@
         border-radius: 5px;
         border: 2px solid #333;
         display: flex;
+        gap: 5px;
         padding: 5px;
         font-size: 16px;
         font-weight: 500;
@@ -100,6 +124,17 @@
       height: 100%;
       transition: 300ms;
       overflow: hidden;
+      display: flex;
+      font-size: 16px;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .schedule-form {
+        display: flex;
+        white-space: nowrap;
+        align-items: center;
+        gap: 5px;
+      }
     }
 
     .frame-close {
@@ -124,32 +159,32 @@
           padding: 5px;
           flex-shrink: 0;
           color: #fff;
-          background-color: rgb(159, 159, 159);
+          background-color: rgb(247, 153, 153);
           font-size: 14px;
           cursor: pointer;
         }
 
         .date-tab-active {
           font-size: 18px;
-          background-color: @theme-black;
+          background-color: @theme-color;
         }
       }
 
       .grid-body {
         height: 100%;
         width: 100%;
-        overflow-y: scroll;
+        overflow-x: scroll;
         gap: 10px;
-        padding-right: 5px;
+        padding-bottom: 5px;
         display: flex;
-        flex-direction: column;
 
         .schedule-item {
           flex-shrink: 0;
           overflow: hidden;
-          // background-color: rgb(255, 206, 206);
-          border: 2px solid @theme-black;
-          border-radius: 6px 6px 20px 6px;
+          border: 2px solid @theme-color;
+          border-radius: 10px 10px 20px 10px;
+          display: grid;
+          grid-template-rows: auto 1fr auto;
 
           .item-header {
             display: flex;
@@ -157,11 +192,12 @@
             user-select: none;
             justify-content: space-between;
             align-items: center;
+            // background-color: rgb(255, 215, 215);
 
             .item-time {
               color: #fff;
               font-weight: 600;
-              background-color: @theme-black;
+              background-color: @theme-color;
               height: 100%;
               padding: 5px;
               border-radius: 0 0 5px 0;
@@ -169,7 +205,7 @@
             }
 
             .item-place {
-              background-color: #fff;
+              // background-color: rgb(255, 215, 215);
               display: flex;
               align-items: center;
               justify-content: flex-end;
@@ -178,29 +214,24 @@
               flex-grow: 1;
               height: 100%;
               white-space: nowrap;
-              img {
-                height: 80%;
-              }
             }
           }
 
           .item-content {
             padding: 10px;
-            border-radius: 5px 0 0 0;
-            background-color: #fff;
-            border-bottom: 2px dashed #ddd;
+            // background-color: rgb(255, 215, 215);
+            border-bottom: 2px dashed rgb(255, 199, 199);
 
             .item-detail {
               padding-top: 10px;
               padding-left: 5px;
               font-size: 16px;
-              background-color: #fff;
             }
           }
 
           .item-participants {
             padding: 5px 10px;
-            background-color: #eee;
+            background-color: rgb(251, 236, 236);
             font-size: 14px;
             display: flex;
             align-items: center;
@@ -221,6 +252,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { CalendarPlus } from "lucide-vue-next";
+import { MapPin } from "lucide-vue-next";
 
 const dateTabSelected = ref(0);
 
@@ -245,12 +278,6 @@ const scheduleData = ref([
         place: "二楼接待处",
         participants: ["小明", "小刚", "小红"],
       },
-      {
-        time1: "13:00",
-        time2: "17:00",
-        content: "穿越书海遇见你——锡图换书大集",
-        participants: ["小明"],
-      },
     ],
   },
   {
@@ -261,7 +288,7 @@ const scheduleData = ref([
         time2: "10:00",
         content: "东林文化讲坛:中国古典诗词的理解与欣赏",
         place: "一楼展览处",
-        participants: [],
+        participants: ["全体"],
       },
     ],
   },
@@ -272,7 +299,7 @@ const scheduleData = ref([
         time1: "9:00",
         time2: "10:00",
         content: "吴文化专题讲座:《无锡梅里遗址考古报告》解读",
-        participants: [],
+        participants: ["全体"],
       },
     ],
   },

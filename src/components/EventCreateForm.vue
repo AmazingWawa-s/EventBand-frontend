@@ -44,26 +44,6 @@
     gap: 5px;
   }
 
-  input {
-    border: 1px solid #ddd;
-    outline: none;
-    font-size: 18px;
-    height: 32px;
-    width: 100%;
-    font-family: sans-serif;
-    color: #333;
-    padding: 5px 10px;
-  }
-
-  textarea {
-    border: 1px solid #ddd;
-    color: #333;
-    outline: none;
-    font-family: sans-serif;
-    width: 100%;
-    padding: 5px 10px;
-  }
-
   .ecform-body {
     display: grid;
     width: 100%;

@@ -10,10 +10,7 @@
       <div class="menu-frame"></div>
     </div>
     <div class="body-frame">
-      <div class="body-setting">
-        <div>参与方式：报名参加/自由参加</div>
-        <div>参与方式：报名参加/自由参加</div>
-      </div>
+      <div class="body-setting"></div>
     </div>
   </div>
 </template>
