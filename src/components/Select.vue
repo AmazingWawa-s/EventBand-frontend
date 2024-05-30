@@ -1,9 +1,10 @@
 <template>
   <div class="select-main-container">
-    <div class="select-header">
+    <div class="select-header" @mousewheel="ScaleSelectorScroll">
       人数：
       <div class="select-slide">
         <div
+          ref="ScaleSelector"
           v-for="(item, i) in scaleList"
           :class="{ 'scale-selected': i == selectScale, 'scale-item': true }"
           @click="() => (selectScale = i)"
@@ -14,23 +15,32 @@
       </div>
     </div>
     <div class="select-body">
-      <div class="place-menu">
+      <div class="place-menu" @mousewheel="PlaceSelectorScroll">
         <div
           :class="{ 'menu-item': true, 'menu-selected': i == selectMenu }"
-          v-for="(item, i) in placeMenu"
+          v-for="(item, i) in menuList"
           :key="item"
           @click="() => (selectMenu = i)"
         >
-          <span class="menu-item-count"></span>
-          <span>{{ item }}</span>
+          <span class="menu-item-count">{{
+            selectCount[i] == 0 ? "" : selectCount[i]
+          }}</span>
+          <span>{{ item.place }}</span>
         </div>
       </div>
       <div class="select-content">
-        <div class="content-item">任意</div>
-        <div class="content-item" v-for="item in placeContents[selectMenu]" :key="item">
-          {{ item }}
+        <div
+          :class="{
+            'content-item': true,
+            'content-item-selected': item.select,
+          }"
+          @click="() => (item.select = !item.select)"
+          v-for="item in menuList[selectMenu].menu"
+          :key="item"
+          v-show="item.size & (1 << selectScale)"
+        >
+          {{ item.name }}
         </div>
-        <div class="content-item content-item-selected">605</div>
       </div>
     </div>
   </div>
@@ -67,6 +77,7 @@
       align-items: center;
       justify-items: center;
       position: relative;
+      background-color: #666;
     }
 
     .select-slide::after {
@@ -133,8 +144,7 @@
           justify-content: center;
           width: 16px;
           background-color: #eee;
-          font-size: 10px;
-          font-weight: 100;
+          font-size: 12px;
         }
       }
 
@@ -185,35 +195,185 @@
 </style>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 const selectScale = ref(0);
 
-const placeMenu = ref([
-  "逸夫楼",
-  "机电楼",
-  "教职工礼堂",
-  "经管楼",
-  "操场",
-  "体育馆",
-  "学活中心",
+const selectCount = computed(() => {
+  let arr = new Array(menuList.value.length);
+  for (let i = 0; i < menuList.value.length; i++) {
+    let count = 0;
+    for (let index in menuList.value[i].menu) {
+      if (menuList.value[i].menu[index].select) {
+        count++;
+      }
+    }
+    arr[i] = count;
+  }
+  return arr;
+});
+
+const ScaleSelector = ref();
+
+const ScaleSelectorScroll = (e) => {
+  console.log(e.wheelDelta);
+  if (e.wheelDelta < 0) {
+    selectScale.value =
+      selectScale.value == scaleList.value.length - 1 ? 0 : selectScale.value + 1;
+  } else {
+    selectScale.value =
+      selectScale.value == 0 ? scaleList.value.length - 1 : selectScale.value - 1;
+  }
+};
+
+const PlaceSelectorScroll = (e) => {
+  if (e.wheelDelta < 0) {
+    selectMenu.value =
+      selectMenu.value == menuList.value.length - 1
+        ? selectMenu.value
+        : selectMenu.value + 1;
+  } else {
+    selectMenu.value = selectMenu.value == 0 ? selectMenu.value : selectMenu.value - 1;
+  }
+};
+
+const menuList = ref([
+  {
+    place: "逸夫楼",
+    menu: [
+      {
+        name: "101",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "201",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "301",
+        size: 0b000011,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "经管楼",
+    menu: [
+      {
+        name: "101",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "201",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "301",
+        size: 0b000011,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "机电楼",
+    menu: [
+      {
+        name: "101",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "201",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "301",
+        size: 0b000011,
+        select: false,
+      },
+      {
+        name: "401",
+        size: 0b110000,
+        select: false,
+      },
+      {
+        name: "501",
+        size: 0b000011,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "教职工礼堂",
+    menu: [
+      {
+        name: "教职工礼堂",
+        size: 0b111001,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "操场",
+    menu: [
+      {
+        name: "操场",
+        size: 0b110001,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "体育馆",
+    menu: [
+      {
+        name: "篮球场",
+        size: 0b111001,
+        select: false,
+      },
+      {
+        name: "会议室101",
+        size: 0b000111,
+        select: false,
+      },
+      {
+        name: "会议室102",
+        size: 0b000111,
+        select: false,
+      },
+    ],
+  },
+  {
+    place: "学活中心",
+    menu: [
+      {
+        name: "102",
+        size: 0b000111,
+        select: false,
+      },
+    ],
+  },
 ]);
 
-const placeSelected = ref([]);
-
-const placeContents = ref([
-  ["101", "201", "301", "401", "501", "601", "701"],
-  ["101", "201", "301", "401"],
-  ["教职工礼堂"],
-  ["101", "201", "301", "401"],
-  ["操场"],
-  ["篮球场", "会议室101", "会议室102"],
-  ["101", "201", "301", "401"],
-]);
+const placeSelected = ref({});
 
 const selectMenu = ref(0);
 
-const scaleList = ref(["×", "1~5", "5~10", "10~30", "30~50", "50+"]);
+const scaleList = ref([
+  "×", //0b000001 1
+  "1~5", //0b000010 2
+  "5~10", //0b000100 4
+  "10~30", //0b001000 8
+  "30~50", //0b010000 16
+  "50+", //0b100000 32
+]);
 
 const selectContent = ref([]);
+
+const selectPlace = (i) => {};
 </script>
