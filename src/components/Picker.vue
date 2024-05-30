@@ -1,29 +1,32 @@
 <template>
   <div class="picker-main-container">
     <div class="time-list">
-      {{
-        selectArr[picker1] +
-        "~" +
-        selectArr[picker2 + picker1] +
-        " " +
-        selectArr3[picker3] +
-        "~" +
-        selectArr3[picker4]
-      }}
+      <span>
+        {{
+          selectArr[picker1] == "--" ? "" : selectArr[picker1] + "~" + selectArr[picker2]
+        }}
+      </span>
+      <span>
+        {{
+          selectArr[picker3] == "--"
+            ? ""
+            : selectArr2[picker3] + "~" + selectArr2[picker4]
+        }}
+      </span>
     </div>
     <div class="picker-header">
       <div>日期</div>
       <div>时间段</div>
     </div>
     <div class="picker-body">
-      <div class="picker-scroll">
+      <div class="picker-scroll" @mousewheel="scrollPicker1Wheel">
         <div
           class="picker-list"
           :style="{ top: `calc(50% - ` + (picker1 * 30 + 15) + `px)` }"
         >
           <div
             :class="{ 'picker-item': true, 'picker-select': index == picker1 }"
-            @click="scrollPicker1(index)"
+            @click="scrollPicker(1, index)"
             v-for="(item, index) in selectArr"
             :key="item"
           >
@@ -32,14 +35,34 @@
         </div>
       </div>
       <div class="divide"></div>
-      <div class="picker-scroll">
+      <div class="picker-scroll" @mousewheel="scrollPicker2Wheel">
         <div
           class="picker-list"
           :style="{ top: `calc(50% - ` + (picker2 * 30 + 15) + `px)` }"
         >
           <div
-            :class="{ 'picker-item': true, 'picker-select': index == picker2 }"
-            @click="() => (picker2 = index)"
+            :class="{
+              'picker-item': true,
+              'picker-select': index == picker2,
+              'picker-disabled': index < picker1,
+            }"
+            @click="scrollPicker(2, index)"
+            v-for="(item, index) in selectArr"
+            :key="item"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </div>
+      <div class="divide"></div>
+      <div class="picker-scroll" @mousewheel="scrollPicker3Wheel">
+        <div
+          class="picker-list"
+          :style="{ top: `calc(50% - ` + (picker3 * 30 + 15) + `px)` }"
+        >
+          <div
+            :class="{ 'picker-item': true, 'picker-select': index == picker3 }"
+            @click="scrollPicker(3, index)"
             v-for="(item, index) in selectArr2"
             :key="item"
           >
@@ -48,36 +71,20 @@
         </div>
       </div>
       <div class="divide"></div>
-      <div class="picker-scroll">
-        <div
-          class="picker-list"
-          :style="{ top: `calc(50% - ` + (picker3 * 30 + 15) + `px)` }"
-        >
-          <div
-            :class="{ 'picker-item': true, 'picker-select': index == picker3 }"
-            @click="() => (picker3 = index)"
-            v-for="(item, index) in selectArr3"
-            :key="item"
-            :style="{ 'font-size': 20 - Math.abs(picker3 - index) * 3 + 'px' }"
-          >
-            {{ item }}
-          </div>
-        </div>
-      </div>
-      <div class="divide"></div>
-      <div class="picker-scroll">
+      <div class="picker-scroll" @mousewheel="scrollPicker4Wheel">
         <div
           class="picker-list"
           :style="{ top: `calc(50% - ` + (picker4 * 30 + 15) + `px)` }"
         >
           <div
-            :class="{ 'picker-item': true, 'picker-select': index == picker4 }"
-            @click="() => (picker4 = index)"
-            v-for="(item, index) in selectArr3.slice(picker3)"
-            :key="item"
-            :style="{
-              'font-size': 20 - Math.abs(picker4 - index) * 3 + 'px',
+            :class="{
+              'picker-item': true,
+              'picker-select': index == picker4,
+              'picker-disabled': index < picker3,
             }"
+            @click="scrollPicker(4, index)"
+            v-for="(item, index) in selectArr2"
+            :key="item"
           >
             {{ item }}
           </div>
@@ -106,6 +113,7 @@
     font-size: 18px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     overflow: hidden;
   }
 
@@ -161,6 +169,11 @@
         font-size: 20px;
       }
 
+      .picker-disabled {
+        pointer-events: none;
+        color: #ddd;
+      }
+
       .picker-item:hover {
         background-color: #eee;
       }
@@ -206,17 +219,7 @@ const selectArr = ref([
   "5/31",
 ]);
 
-const scrollPicker1 = (index) => {
-  let delta = index - picker1.value;
-  picker1.value = index;
-  picker2.value += delta;
-};
-
-const selectArr2 = computed(() => {
-  return selectArr.value.slice(picker1.value);
-});
-
-const selectArr3 = ref([
+const selectArr2 = ref([
   "--",
   "8:00",
   "9:00",
@@ -233,5 +236,64 @@ const selectArr3 = ref([
   "20:00",
   "21:00",
   "22:00",
+  "23:00",
 ]);
+
+const scrollPicker = (picker, index) => {
+  if (index < 0) {
+    return;
+  } else if (index >= selectArr.value.length && (picker == 1 || picker == 2)) {
+    return;
+  } else if (index >= selectArr2.value.length && (picker == 3 || picker == 4)) {
+    return;
+  } else {
+    if (picker == 1) {
+      picker1.value = index;
+      if (picker2.value < picker1.value) {
+        picker2.value = picker1.value;
+      }
+    } else if (picker == 2) {
+      picker2.value = picker1.value > index ? picker1.value : index;
+    } else if (picker == 3) {
+      picker3.value = index;
+      if (picker4.value < picker3.value) {
+        picker4.value = picker3.value;
+      }
+    } else if (picker == 4) {
+      picker4.value = picker3.value > index ? picker3.value : index;
+    }
+  }
+};
+
+const scrollPicker1Wheel = (e) => {
+  if (e.wheelDelta > 0) {
+    scrollPicker(1, picker1.value - 1);
+  } else {
+    scrollPicker(1, picker1.value + 1);
+  }
+};
+
+const scrollPicker2Wheel = (e) => {
+  if (e.wheelDelta > 0) {
+    scrollPicker(2, picker2.value - 1);
+  } else {
+    scrollPicker(2, picker2.value + 1);
+  }
+};
+
+const scrollPicker3Wheel = (e) => {
+  if (e.wheelDelta > 0) {
+    scrollPicker(3, picker3.value - 1);
+  } else {
+    scrollPicker(3, picker3.value + 1);
+  }
+};
+
+const scrollPicker4Wheel = (e) => {
+  if (e.wheelDelta > 0) {
+    scrollPicker(4, picker4.value - 1);
+  } else {
+    scrollPicker(4, picker4.value + 1);
+  }
+};
 </script>
