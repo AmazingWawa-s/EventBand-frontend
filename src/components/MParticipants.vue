@@ -51,7 +51,9 @@
     </div>
     <div class="participants-bottom">
       <div class="bottom-item invite"><UserRoundPlus :size="20" />邀请</div>
-      <div class="bottom-item new"><Users :size="20" />新建分组</div>
+      <div class="bottom-item new" @click="jumpToChatRoom">
+        <DoorOpen :size="20" />进入聊天室
+      </div>
       <div class="setting"></div>
     </div>
   </div>
@@ -240,7 +242,17 @@ import { Users } from "lucide-vue-next";
 import { SquarePen } from "lucide-vue-next";
 import { Mail } from "lucide-vue-next";
 import { CircleX } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+import { DoorOpen } from "lucide-vue-next";
 import { ref } from "vue";
+
+const router = useRouter();
+
+const jumpToChatRoom = () => {
+  router.push({
+    path: "/chatRoom",
+  });
+};
 
 const condition = ref("全部");
 

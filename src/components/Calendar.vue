@@ -1,9 +1,9 @@
 <template>
   <div class="calendar-main-container">
     <div class="calendar-header">
-      <p class="button" @click="changeMonth(-1)">{{ "<<<<<" }}</p>
-      <p>{{ year + " " }}年{{ " " + month + " " }}月</p>
-      <p class="button" @click="changeMonth(1)">{{ ">>>>>" }}</p>
+      <p class="button" @click="changeMonth(-1)">{{ "<" }}</p>
+      <p>{{ year + " " }}.{{ " " + month + " " }}</p>
+      <p class="button" @click="changeMonth(1)">{{ ">" }}</p>
     </div>
     <div class="calendar-body">
       <div>日</div>
@@ -18,14 +18,20 @@
         :key="index"
         :class="{
           'calendar-item': true,
-          'calendar-selected': true,
+          'calendar-selected':
+            checkedDate.date == item &&
+            checkedDate.month == month &&
+            checkedDate.year == year,
           'calendar-past':
             year < currentDate.getFullYear() ||
             (year == currentDate.getFullYear() && month - 1 < currentDate.getMonth()) ||
             (item < currentDate.getDate() && month - 1 == currentDate.getMonth()),
         }"
       >
-        <div :class="{ 'calendar-item-sub': item, 'calendar-void': !item }">
+        <div
+          @click="checkDate(item)"
+          :class="{ 'calendar-item-sub': item, 'calendar-void': !item }"
+        >
           {{ item }}
         </div>
       </div>
@@ -37,6 +43,7 @@
 .calendar-main-container {
   width: 100%;
   padding: 10px;
+  font-family: "consolas";
   background-color: #fff;
   height: 100%;
   display: grid;
@@ -71,7 +78,7 @@
     gap: 5px;
 
     .calendar-past {
-      color: #aaa;
+      color: #ccc;
     }
 
     .calendar-item {
@@ -80,16 +87,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
       background-color: #eee;
       border-radius: 10px;
-      padding: 3px;
+      padding: 5px;
+      pointer-events: none;
+      transition: 300ms;
+      font-weight: 600;
+    }
+
+    .calendar-item:hover {
     }
 
     .calendar-item-sub {
       background-color: #fff;
+      pointer-events: all;
       width: 100%;
       height: 100%;
-      border-radius: 7px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -98,19 +113,24 @@
     .calendar-void {
       background-color: #eee;
     }
+
+    .calendar-selected {
+      background-color: #666;
+    }
   }
 }
 </style>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, inject } from "vue";
 
 const currentDate = new Date();
 const year = ref(currentDate.getFullYear());
 const month = ref(currentDate.getMonth() + 1);
-// const calendarArray = ref([...new Array(35)]);
 const calendarArray_previous = ref([]);
 const calendarArray_next = ref([]);
+
+const checkedDate = inject("checkedDate");
 
 const calendarArray = computed(() => {
   let firstDay = new Date(year.value, month.value - 1, 1).getDay();
@@ -134,5 +154,11 @@ const changeMonth = (amount) => {
     month.value = 1;
     year.value += 1;
   }
+};
+
+const checkDate = (date) => {
+  checkedDate.date = date;
+  checkedDate.month = month.value;
+  checkedDate.year = year.value;
 };
 </script>

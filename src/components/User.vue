@@ -6,6 +6,7 @@
     <div class="grid-tasks grid-item">
       <Todolist />
     </div>
+    <div class="grid-item"></div>
     <div class="grid-events grid-item">
       <div class="grid-events-frame">
         <div
@@ -15,11 +16,9 @@
           }"
         >
           <div class="grid-events-create">
-            <!-- <div class="grid-events-square2"></div> -->
             <EventCreateForm />
           </div>
           <div class="grid-events-list">
-            <!-- <div class="grid-events-square1"></div> -->
             <EventList />
           </div>
         </div>
@@ -122,16 +121,25 @@
 </style>
 
 <script setup>
-import Button from "../components/Button.vue";
 import Calendar from "../components/Calendar.vue";
 import Todolist from "../components/TodoList.vue";
 import EventCreateForm from "../components/EventCreateForm.vue";
 import EventList from "../components/EventList.vue";
 import CreateButton from "../components/svg/CreateButton.vue";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, reactive, provide } from "vue";
 const router = useRouter();
 const isSlide = ref(false);
+
+const currentDate = new Date();
+
+const checkedDate = reactive({
+  year: currentDate.getFullYear(),
+  month: currentDate.getMonth() + 1,
+  date: currentDate.getDate(),
+});
+
+provide("checkedDate", checkedDate);
 
 const jumpToEventDetail = () => {
   router.push({

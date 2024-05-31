@@ -40,6 +40,8 @@
           v-show="item.size & (1 << selectScale)"
         >
           {{ item.name }}
+          <CircleCheckBig :size="16" color="green" v-if="item.select" />
+          <CircleDashed :size="16" color="#ddd" v-else />
         </div>
       </div>
     </div>
@@ -65,7 +67,7 @@
     grid-template-columns: auto 1fr;
     align-items: center;
     color: #fff;
-    background-color: #666;
+    background-color: #333;
     padding: 0 5px;
 
     .select-slide {
@@ -77,7 +79,7 @@
       align-items: center;
       justify-items: center;
       position: relative;
-      background-color: #666;
+      background-color: #333;
     }
 
     .select-slide::after {
@@ -100,7 +102,7 @@
       transition: 200ms;
       display: flex;
       font-size: 14px;
-      color: #666;
+      color: #333;
       align-items: center;
       justify-content: center;
     }
@@ -167,6 +169,7 @@
       height: 100%;
       width: 100%;
       padding: 5px;
+      border-radius: 0 5px 10px 0;
       display: flex;
       align-items: flex-start;
       align-content: flex-start;
@@ -180,10 +183,13 @@
         background-color: #fff;
         padding: 5px;
         position: relative;
+        display: flex;
+        align-items: center;
+        gap: 3px;
       }
 
       .content-item-selected {
-        background: center/100% no-repeat url("../assets/select.svg") #fff;
+        // background: center/100% no-repeat url("../assets/select.svg") #fff;
       }
     }
 
@@ -196,7 +202,8 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
-
+import { CircleDashed } from "lucide-vue-next";
+import { CircleCheckBig } from "lucide-vue-next";
 const selectScale = ref(0);
 
 const selectCount = computed(() => {

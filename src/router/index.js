@@ -23,9 +23,9 @@ const routes = [
         component: () => import('../components/Admin.vue')
     },
     {
-        path: '/loading',
-        name: 'loading',
-        component: () => import('../components/LoadingTest.vue')
+        path: '/chatRoom',
+        name: 'chatRoom',
+        component: () => import('../components/ChatRoom.vue')
     }
 ]
 

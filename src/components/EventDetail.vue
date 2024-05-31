@@ -18,7 +18,7 @@
       <MParticipants />
     </div>
     <div class="module-frame feedback">
-      
+      <MOthers />
     </div>
   </div>
 </template>
@@ -94,6 +94,7 @@
 import MSchedule from "../components/MSchedule.vue";
 import MParticipants from "../components/MParticipants.vue";
 import MBudgets from "../components/MBudgets.vue";
+import MOthers from "../components/MOthers.vue";
 import MInfo from "../components/MInfo.vue";
 import { ref } from "vue";
 

@@ -4,28 +4,24 @@
     :class="{ inform: true, 'todolist-item': true }"
   >
     <div class="todolist-item-body">
+      <div
+        class="label"
+        :style="{
+          backgroundColor:
+            type == 'error'
+              ? 'orangered'
+              : type == 'waiting'
+              ? 'lightblue'
+              : 'lightgreen',
+        }"
+      ></div>
       <div class="todolist-item-content">
         <p>{{ time }}</p>
         <div>{{ content }}</div>
       </div>
-      <img
-        v-if="type == 'waiting'"
-        class="todolist-item-button"
-        src="../assets/waiting.svg"
-        alt=""
-      />
-      <img
-        v-else-if="type == 'link'"
-        class="todolist-item-button"
-        src="../assets/jumpTo.svg"
-        alt=""
-      />
-      <img
-        v-else-if="type == 'error'"
-        class="todolist-item-button"
-        src="../assets/more.svg"
-        alt=""
-      />
+      <AlarmClock v-if="type == 'waiting'" class="todolist-item-button" />
+      <CircleArrowRight v-else-if="type == 'link'" class="todolist-item-button" />
+      <MessageCircleWarning v-else-if="type == 'error'" class="todolist-item-button" />
     </div>
   </div>
   <div
@@ -38,11 +34,6 @@
 </template>
 
 <style lang="less" scoped>
-.inform {
-  // border: 2px solid @theme-black;
-  // background-color: @theme-black;
-}
-
 .todolist-item {
   cursor: pointer;
   user-select: none;
@@ -54,8 +45,16 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr auto;
+    gap: 5px;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
+
+    .label {
+      width: 5px;
+      background-color: orange;
+      height: 80%;
+      border-radius: 10px;
+    }
 
     .todolist-item-content {
       height: 100%;
@@ -70,7 +69,6 @@
     }
 
     .todolist-item-button {
-      width: 24px;
       margin: 0 10px;
     }
   }
@@ -95,7 +93,9 @@
 
 <script setup>
 import { ref } from "vue";
-
+import { AlarmClock } from "lucide-vue-next";
+import { CircleArrowRight } from "lucide-vue-next";
+import { MessageCircleWarning } from "lucide-vue-next";
 const props = defineProps(["time", "content", "type", "details"]);
 
 const showDetail = ref(false);

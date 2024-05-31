@@ -20,18 +20,20 @@
 }
 
 input {
-  border: 1px solid #ddd;
+  border: 1px solid #666;
   outline: none;
   font-size: 18px;
   height: 32px;
   width: 100%;
   font-family: sans-serif;
+  border-radius: 5px 10px 5px 10px;
   color: #333;
   padding: 5px 10px;
 }
 
 textarea {
-  border: 1px solid #ddd;
+  border: 1px solid #666;
+  border-radius: 5px 10px 5px 10px;
   color: #333;
   outline: none;
   font-family: sans-serif;

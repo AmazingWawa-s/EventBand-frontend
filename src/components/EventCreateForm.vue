@@ -35,7 +35,7 @@
   font-size: 16px;
   gap: 5px;
   overflow: hidden;
-  color: #666;
+  color: #333;
 
   .ecform-item {
     display: grid;

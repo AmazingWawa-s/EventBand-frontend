@@ -106,14 +106,16 @@
   gap: 5px;
 
   .time-list {
-    border: 1px solid #ddd;
+    border: 1px solid #666;
+    border-radius: 5px 10px 5px 10px;
     padding: 0 5px;
     width: 100%;
     height: 32px;
     font-size: 18px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    justify-content: space-between;
+    justify-items: center;
     overflow: hidden;
   }
 
@@ -133,6 +135,7 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
     width: 100%;
+    border-radius: 5px 10px 5px 10px;
     overflow: hidden;
     align-items: center;
 

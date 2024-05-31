@@ -2,8 +2,9 @@
   <div class="m-budgets-main-container">
     <div class="budgets-header">
       经费管理
-      <div>
-        <span>经费报销</span>
+      <div class="button">
+        <div class="count">1</div>
+        <div>经费报销</div>
       </div>
     </div>
     <div class="budgets-body">
@@ -12,9 +13,9 @@
         <span class="budgets-num">1200</span>
       </div>
       <div class="budgets-bottom">
-        <!-- <div class="budgets-graph">
+        <div class="budgets-graph">
           <div class="budgets-item" v-for="i in 100" :key="i"></div>
-        </div> -->
+        </div>
         <div class="budgets-detail-button">详情</div>
       </div>
     </div>
@@ -38,12 +39,27 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    div {
-      span {
-        font-size: 14px;
-        font-weight: 500;
-        margin: 0 5px;
-        cursor: pointer;
+
+    .button {
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      padding: 5px;
+      justify-content: center;
+
+      .count {
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #eee;
       }
     }
   }
