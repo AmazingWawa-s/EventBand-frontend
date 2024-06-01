@@ -20,6 +20,7 @@
   padding: @event-detail-padding;
   width: 100%;
   height: 100%;
+  background-color: #fff;
   display: grid;
   grid-template-columns: auto 1fr;
   overflow: hidden;

@@ -83,13 +83,14 @@
       border-bottom: 3px dotted #333;
     }
 
-    .title:after {
+    .title::after {
       content: "";
       transition: 300ms;
       z-index: 1;
       border-radius: 4px 4px 0 0;
       position: absolute;
       mix-blend-mode: saturation;
+      box-shadow: 0 0 3px rgb(255, 230, 172);
       background-color: rgb(255, 230, 172);
       width: 100%;
       height: 100%;
@@ -123,12 +124,13 @@
 
     .state::after {
       background-color: rgb(255, 209, 172);
+      box-shadow: 0 0 5px rgb(255, 194, 145);
       position: absolute;
       z-index: 1;
       content: "";
       mix-blend-mode: saturation;
       transition: 300ms;
-      border-radius: 5px;
+      border-radius: 4px;
       width: 100%;
       height: 100%;
       top: 2px;

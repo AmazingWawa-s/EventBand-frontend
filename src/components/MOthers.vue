@@ -1,16 +1,27 @@
 <template>
   <div class="m-others-main-container">
-    <div class="body"></div>
     <div class="side-bar">
       <div @click="menuSelect = 0" :class="{ item: true, selected: menuSelect == 0 }">
-        <Bell />
+        <PieChart />
+        <span class="word">筹备进度</span>
       </div>
       <div @click="menuSelect = 1" :class="{ item: true, selected: menuSelect == 1 }">
+        <HandCoins />
+        <span class="word">经费详情</span>
+      </div>
+      <div @click="menuSelect = 2" :class="{ item: true, selected: menuSelect == 2 }">
         <PackageCheck />
+        <span class="word">物资管理</span>
       </div>
-      <div @click="menuSelect = 4" :class="{ item: true, selected: menuSelect == 4 }">
+      <div @click="menuSelect = 3" :class="{ item: true, selected: menuSelect == 3 }">
         <Sticker />
+        <span class="word">活动反馈</span>
       </div>
+    </div>
+    <div class="body">
+      <keep-alive>
+        <component :is="menuList[menuSelect]" />
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -21,52 +32,66 @@
   overflow: hidden;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
 
   .side-bar:hover {
-    border-radius: 5px 5px 5px 5px;
-    width: 70px;
+    width: 122px;
   }
 
   .side-bar {
     transition: 300ms;
-    width: 60px;
-    // background-color: #666;
-    border: 2px solid #333;
+    overflow: hidden;
+    width: 52px;
     border-radius: 5px 5px 5px 5px;
+    border: 2px dashed #eee;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 
     .item {
-      transition: 200ms;
-      border-radius: 5px;
-      display: flex;
+      width: 120px;
+      display: grid;
+      justify-items: center;
       align-items: center;
-      justify-content: center;
+      grid-template-columns: 5fr 7fr;
       cursor: pointer;
-      border: 2px;
+      transition: 300ms;
+    }
+
+    .word {
+      white-space: nowrap;
+      justify-self: start;
+      font-size: 14px;
     }
 
     .selected {
-      //   size: 20px;
-      color: orange;
+      color: orangered;
     }
   }
 
   .body {
+    border-radius: 5px 5px 5px 5px;
+    border: 2px dashed #eee;
+    background-color: #fff;
   }
 }
 </style>
 
 <script setup>
-//经费详情,更新日志,活动反馈,资源管理
-
-import { Bell } from "lucide-vue-next";
+//筹备进度，经费详情，物资管理，活动反馈
 import { Sticker } from "lucide-vue-next";
 import { Briefcase } from "lucide-vue-next";
 import { PackageCheck } from "lucide-vue-next";
+import { HandCoins } from "lucide-vue-next";
+import { PieChart } from "lucide-vue-next";
 import { ref } from "vue";
+import Wprogress from "../components/Wprogress.vue";
+import Wbudgets from "../components/Wbudgets.vue";
+import Wsupplies from "../components/Wsupplies.vue";
+import Wfeedback from "../components/Wfeedback.vue";
 
 const menuSelect = ref(0);
+const menuList = ref([Wprogress, Wbudgets, Wsupplies, Wfeedback]);
 </script>

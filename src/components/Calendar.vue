@@ -2,7 +2,7 @@
   <div class="calendar-main-container">
     <div class="calendar-header">
       <p class="button" @click="changeMonth(-1)">{{ "<" }}</p>
-      <p>{{ year + " " }}.{{ " " + month + " " }}</p>
+      <p>{{ year + " " }}/{{ " " + month + " " }}</p>
       <p class="button" @click="changeMonth(1)">{{ ">" }}</p>
     </div>
     <div class="calendar-body">

@@ -62,6 +62,7 @@
 <style lang="less" scoped>
 .m-participants-main-container {
   position: relative;
+  background-color: #fff;
   z-index: @z-index-modules;
   width: 100%;
   height: 100%;

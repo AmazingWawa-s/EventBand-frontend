@@ -45,9 +45,7 @@
 
   .module-frame {
     border-radius: @user-item-border-radius-sub;
-    background-color: #fff;
     width: 100%;
-    // border: 1px solid #eee;
     overflow: hidden;
     height: 100%;
   }
@@ -73,7 +71,7 @@
     height: 100%;
     gap: @event-detail-gap;
     overflow: hidden;
-    grid-template-rows: 2fr 1fr;
+    grid-template-rows: 3fr 1fr;
   }
 
   .participants {

@@ -54,19 +54,25 @@
               <div class="item-time">
                 {{ item.time1 + " ~ " + item.time2 }}
               </div>
+              <div class="item-content" :title="item.content">
+                <div>
+                  {{ item.content }}
+                </div>
+              </div>
+            </div>
+            <!-- <div v-if="item.detail" class="item-detail">{{ item.detail }}</div> -->
+            <div class="item-bottom">
+              <div class="item-participants-frame">
+                <div>参与者:</div>
+                <div class="item-participants">
+                  <div v-for="tab in item.participants" :key="tab">
+                    {{ tab }}
+                  </div>
+                </div>
+              </div>
               <div class="item-place">
                 <MapPin :size="16" />
                 {{ item.place }}
-              </div>
-            </div>
-            <div class="item-content">
-              {{ item.content }}
-              <div v-if="item.detail" class="item-detail">{{ item.detail }}</div>
-            </div>
-            <div class="item-participants">
-              参与者：
-              <div v-for="tab in item.participants" :key="tab">
-                {{ tab }}
               </div>
             </div>
           </div>
@@ -77,8 +83,11 @@
 </template>
 
 <style lang="less" scoped>
+@item-frame-color: #666;
+
 .m-schedule-main-container {
   position: relative;
+  background-color: #fff;
   overflow: hidden;
   z-index: @z-index-modules;
   width: 100%;
@@ -173,74 +182,100 @@
       .grid-body {
         height: 100%;
         width: 100%;
-        overflow-x: scroll;
+        overflow-y: scroll;
         gap: 10px;
-        padding-bottom: 5px;
+        padding-right: 5px;
         display: flex;
+        flex-direction: column;
 
         .schedule-item {
           flex-shrink: 0;
           overflow: hidden;
-          border: 2px solid @theme-color;
-          border-radius: 10px 10px 20px 10px;
+          border: 2px solid @item-frame-color;
+          border-radius: 5px 5px 20px 5px;
           display: grid;
-          grid-template-rows: auto 1fr auto;
+          grid-template-rows: auto 1fr;
+          background-color: @item-frame-color;
 
           .item-header {
-            display: flex;
+            display: grid;
             height: 30px;
+            background-color: @item-frame-color;
             user-select: none;
-            justify-content: space-between;
+            grid-template-columns: auto 1fr;
             align-items: center;
-            // background-color: rgb(255, 215, 215);
+            overflow: hidden;
+            width: 100%;
+          }
 
-            .item-time {
-              color: #fff;
-              font-weight: 600;
-              background-color: @theme-color;
-              height: 100%;
-              padding: 5px;
-              border-radius: 0 0 5px 0;
-              position: relative;
-            }
+          .item-time {
+            color: #fff;
+            font-weight: 600;
+            height: 100%;
+            white-space: nowrap;
+            padding: 5px;
+            position: relative;
+          }
 
-            .item-place {
-              // background-color: rgb(255, 215, 215);
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
-              font-size: 16px;
-              padding-right: 5px;
-              flex-grow: 1;
-              height: 100%;
+          .item-place {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 16px;
+            padding-right: 5px;
+            height: 100%;
+            white-space: nowrap;
+          }
+
+          .item-content {
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 2px dashed @item-frame-color;
+            padding: 0 5px;
+            font-size: 18px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            div {
+              flex: 1;
+              overflow: hidden;
+              text-overflow: ellipsis;
               white-space: nowrap;
             }
           }
 
-          .item-content {
-            padding: 10px;
-            // background-color: rgb(255, 215, 215);
-            border-bottom: 2px dashed rgb(255, 199, 199);
-
-            .item-detail {
-              padding-top: 10px;
-              padding-left: 5px;
-              font-size: 16px;
-            }
-          }
-
-          .item-participants {
-            padding: 5px 10px;
-            background-color: rgb(251, 236, 236);
-            font-size: 14px;
+          .item-bottom {
+            padding: 5px;
+            background-color: #eee;
             display: flex;
             align-items: center;
+            gap: 5px;
+            justify-content: space-between;
+          }
 
-            div {
-              border: 1px solid #333;
-              padding: 5px;
-              margin: 0 5px;
-              border-radius: 5px;
+          .item-detail {
+            font-size: 16px;
+          }
+
+          .item-participants-frame {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            font-size: 14px;
+            gap: 5px;
+            align-items: center;
+
+            .item-participants {
+              display: flex;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 5px;
+
+              div {
+                border: 1px solid #333;
+                padding: 5px;
+                border-radius: 5px;
+              }
             }
           }
         }
@@ -273,10 +308,36 @@ const scheduleData = ref([
       },
       {
         time1: "9:00",
+        time2: "10:00",
+        content: "穿越书海遇见你——锡图换书大集",
+        place: "一楼大厅",
+        detail: "详情见群通知",
+        participants: ["全体"],
+      },
+      {
+        time1: "9:00",
+        time2: "10:00",
+        content: "穿越书海遇见你——锡图换书大集",
+        place: "一楼大厅",
+        detail: "详情见群通知",
+        participants: ["全体"],
+      },
+      {
+        time1: "9:00",
         time2: "17:00",
         content: "翰墨流彩 “签”映书香",
         place: "二楼接待处",
-        participants: ["小明", "小刚", "小红"],
+        participants: [
+          "小明",
+          "小刚",
+          "小红",
+          "小刚",
+          "小红",
+          "小刚",
+          "小红",
+          "小刚",
+          "小红",
+        ],
       },
     ],
   },
@@ -286,7 +347,7 @@ const scheduleData = ref([
       {
         time1: "9:00",
         time2: "10:00",
-        content: "东林文化讲坛:中国古典诗词的理解与欣赏",
+        content: "东林文化讲坛:中国古典诗词的理解与欣赏理解与欣赏",
         place: "一楼展览处",
         participants: ["全体"],
       },

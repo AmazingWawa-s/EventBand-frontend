@@ -19,6 +19,11 @@
   color: #333333;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
 input {
   border: 1px solid #666;
   outline: none;

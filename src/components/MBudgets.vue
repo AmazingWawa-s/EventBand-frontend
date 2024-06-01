@@ -8,15 +8,10 @@
       </div>
     </div>
     <div class="budgets-body">
+      <div class="budgets-detail-button"><Search :size="16" />详情</div>
       <div class="budgets-total">
         <span>total:</span>
         <span class="budgets-num">1200</span>
-      </div>
-      <div class="budgets-bottom">
-        <div class="budgets-graph">
-          <div class="budgets-item" v-for="i in 100" :key="i"></div>
-        </div>
-        <div class="budgets-detail-button">详情</div>
       </div>
     </div>
   </div>
@@ -28,6 +23,7 @@
   z-index: @z-index-modules;
   overflow: hidden;
   width: 100%;
+  background-color: #fff;
   height: 100%;
   padding: 10px;
   display: grid;
@@ -66,11 +62,14 @@
 
   .budgets-body {
     display: grid;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    grid-template-rows: auto 1fr;
+    gap: 5px;
+    align-items: end;
+    grid-template-columns: auto 1fr;
 
     .budgets-total {
-      margin-bottom: 5px;
       font-family: "consolas";
       text-align: right;
 
@@ -85,36 +84,21 @@
       }
     }
 
-    .budgets-bottom {
+    .budgets-detail-button {
+      font-size: 16px;
       height: 100%;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 5px;
-
-      .budgets-graph {
-        display: grid;
-        gap: 2px;
-        grid-template-columns: repeat(20, 1fr);
-        grid-template-rows: repeat(5, 1fr);
-
-        .budgets-item {
-          background-color: #eee;
-          border-radius: 2px;
-        }
-      }
-
-      .budgets-detail-button {
-        font-size: 16px;
-        border-radius: 5px;
-        background-color: #eee;
-        padding: 5px;
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-      }
+      border-radius: 30px 10px 10px 30px;
+      background-color: #eee;
+      padding: 10px;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
 </style>
+
+<script setup>
+import { Search } from "lucide-vue-next";
+</script>
