@@ -6,7 +6,21 @@
       <div class="button"><PackagePlus /></div>
     </div>
     <div class="body">
-      <div v-for="item in supplies" :key="item"></div>
+      <div class="header">
+        <div>物资</div>
+        <div class="amount">数量</div>
+        <div class="amount">状态</div>
+      </div>
+      <div class="scroll">
+        <div class="supply-item" v-for="item in supplies" :key="item">
+          <div>{{ item.name }}</div>
+          <div class="end">{{ item.amount }}</div>
+          <div class="end">
+            <div class="state-ready" v-if="item.ready">就绪</div>
+            <div class="state-no" v-else>缺少</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -16,6 +30,7 @@
   width: 100%;
   height: 100%;
   padding: 10px;
+  overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
 
@@ -24,6 +39,7 @@
     display: grid;
     grid-template-columns: 3fr 1fr auto;
     gap: 5px;
+    overflow: hidden;
     align-items: center;
 
     input {
@@ -70,8 +86,67 @@
   .body {
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 3fr 1fr 1fr;
     border-radius: 5px;
+    gap: 5px;
+    font-size: 18px;
+    overflow: hidden;
+
+    .header {
+      height: 30px;
+      border-bottom: 2px solid #ddd;
+      grid-column: 1/4;
+      font-weight: 600;
+      padding-right: 15px;
+      display: grid;
+      grid-template-columns: subgrid;
+
+      .amount {
+        justify-self: self-end;
+      }
+    }
+
+    .scroll {
+      grid-column: 1/4;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-auto-rows: 30px;
+      gap: 10px;
+      padding-right: 5px;
+      height: 100%;
+      overflow-y: scroll;
+
+      .supply-item {
+        height: 30px;
+        grid-column: 1/4;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        white-space: nowrap;
+
+        .end {
+          justify-self: self-end;
+        }
+
+        .state-ready {
+          font-size: 16px;
+          color: #fff;
+          border-radius: 5px;
+          background-color: rgb(44, 189, 0);
+          padding: 5px;
+        }
+
+        .state-no {
+          font-size: 16px;
+          color: #fff;
+          border-radius: 5px;
+          background-color: rgb(255, 66, 66);
+          padding: 5px;
+        }
+      }
+    }
   }
 }
 </style>
@@ -79,7 +154,8 @@
 <script setup>
 import { PackagePlus } from "lucide-vue-next";
 import { ref } from "vue";
-
+import { Check } from "lucide-vue-next";
+import { X } from "lucide-vue-next";
 const supplies = ref([
   {
     name: "麦克风",
@@ -89,6 +165,26 @@ const supplies = ref([
   {
     name: "音箱",
     amount: 2,
+    ready: false,
+  },
+  {
+    name: "宣传手册",
+    amount: 100,
+    ready: false,
+  },
+  {
+    name: "宣传手册",
+    amount: 100,
+    ready: false,
+  },
+  {
+    name: "宣传手册",
+    amount: 100,
+    ready: false,
+  },
+  {
+    name: "宣传手册",
+    amount: 100,
     ready: false,
   },
   {

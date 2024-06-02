@@ -12,6 +12,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  position: relative;
   display: grid;
   grid-template-rows: auto 1fr;
   align-items: center;
@@ -25,7 +26,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 input {
-  border: 1px solid #666;
+  border: 1.5px solid #666;
   outline: none;
   font-size: 18px;
   height: 32px;
@@ -37,7 +38,7 @@ input {
 }
 
 textarea {
-  border: 1px solid #666;
+  border: 1.5px solid #666;
   border-radius: 5px 10px 5px 10px;
   color: #333;
   outline: none;

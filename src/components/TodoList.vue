@@ -178,6 +178,7 @@
         background-color: @todolist-form-color;
         border-radius: 0 0 6px 6px;
         transition: 500ms;
+        border-top: none;
         overflow: hidden;
         height: 100%;
 
@@ -201,7 +202,7 @@
             width: 100%;
             height: 100%;
             border: none;
-            padding: 5px;
+            padding: 10px;
             overflow: hidden;
             box-sizing: border-box;
           }
@@ -225,8 +226,10 @@
           }
 
           .add {
-            background-color: @todolist-frame-color;
-            color: #333;
+            background-color: orange;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
             font-size: 24px;
             display: flex;
             gap: 5px;

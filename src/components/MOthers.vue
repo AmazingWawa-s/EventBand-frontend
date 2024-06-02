@@ -2,8 +2,8 @@
   <div class="m-others-main-container">
     <div class="side-bar">
       <div @click="menuSelect = 0" :class="{ item: true, selected: menuSelect == 0 }">
-        <PieChart />
-        <span class="word">筹备进度</span>
+        <Bolt />
+        <span class="word">基本设置</span>
       </div>
       <div @click="menuSelect = 1" :class="{ item: true, selected: menuSelect == 1 }">
         <HandCoins />
@@ -16,6 +16,10 @@
       <div @click="menuSelect = 3" :class="{ item: true, selected: menuSelect == 3 }">
         <Sticker />
         <span class="word">活动反馈</span>
+      </div>
+      <div @click="menuSelect = 4" :class="{ item: true, selected: menuSelect == 4 }">
+        <LandPlot />
+        <span class="word">场地管理</span>
       </div>
     </div>
     <div class="body">
@@ -51,13 +55,13 @@
     justify-content: space-around;
 
     .item {
-      width: 120px;
+      width: 116px;
       display: grid;
       justify-items: center;
       align-items: center;
       grid-template-columns: 5fr 7fr;
       cursor: pointer;
-      transition: 300ms;
+      transition: 200ms;
     }
 
     .word {
@@ -68,12 +72,14 @@
 
     .selected {
       color: orangered;
+      font-weight: 600;
     }
   }
 
   .body {
     border-radius: 5px 5px 5px 5px;
     border: 2px dashed #eee;
+    overflow: hidden;
     background-color: #fff;
   }
 }
@@ -85,13 +91,15 @@ import { Sticker } from "lucide-vue-next";
 import { Briefcase } from "lucide-vue-next";
 import { PackageCheck } from "lucide-vue-next";
 import { HandCoins } from "lucide-vue-next";
-import { PieChart } from "lucide-vue-next";
+import { Bolt } from "lucide-vue-next";
 import { ref } from "vue";
-import Wprogress from "../components/Wprogress.vue";
+import { LandPlot } from "lucide-vue-next";
+import Wplace from "./Wplace.vue";
 import Wbudgets from "../components/Wbudgets.vue";
 import Wsupplies from "../components/Wsupplies.vue";
 import Wfeedback from "../components/Wfeedback.vue";
+import Wsettings from "../components/Wsettings.vue";
 
 const menuSelect = ref(0);
-const menuList = ref([Wprogress, Wbudgets, Wsupplies, Wfeedback]);
+const menuList = ref([Wsettings, Wbudgets, Wsupplies, Wfeedback, Wplace]);
 </script>

@@ -4,10 +4,17 @@
       <div class="participants-header">
         <div class="front">成员列表</div>
         <div class="end">
-          <div class="button" @click="editActive = !editActive">
+          <div
+            :class="{ button: true, 'button-reverse': editActive }"
+            @click="
+              editActive = !editActive;
+              siftButton = siftButton ? false : true;
+              itemSelected = null;
+            "
+          >
             <SquarePen :size="16" />编辑
           </div>
-          <div class="button" @click="siftButton = !siftButton">
+          <div :class="{ button: true }" @click="siftButton = !siftButton">
             <div class="icon">
               <img src="../assets/sift.svg" alt="" />
               |
@@ -18,13 +25,11 @@
       </div>
       <div :class="{ 'participants-sift': true, 'sift-close': !siftButton }">
         <div
-          class="sift-item"
+          :class="{ 'sift-item': true, 'sift-enhanced': itemSelected }"
           v-for="item in dropMenu"
-          @click="
-            condition = item;
-            siftButton = false;
-          "
+          @click="handleSift(item, null)"
           :key="item"
+          v-show="!(editActive && item == '全部')"
         >
           {{ item }}
         </div>
@@ -34,13 +39,25 @@
       <div class="participants-contents">
         <div
           v-show="condition == '全部' || condition == item.group"
-          v-for="item in participants"
+          v-for="(item, index) in participants"
           class="participants-item"
           :key="item"
         >
-          <div class="">{{ item.name }}</div>
-          <div><Users :size="18" />{{ item.group }}</div>
-          <div class="button">
+          <div>{{ index + 1 }}</div>
+          <div>{{ item.name }}</div>
+          <div @click="itemSelected = item" :class="{ 'group-edit': editActive }">
+            <RefreshCw
+              v-if="editActive"
+              :class="{
+                change: true,
+                rotating: itemSelected == item,
+              }"
+              :size="18"
+            />
+            <Users v-else :size="18" />
+            {{ item.group }}
+          </div>
+          <div :class="{ button: true, hidden: editActive }">
             <Mail :size="18" />
           </div>
           <div :class="{ button: true, hidden: !editActive }">
@@ -60,6 +77,8 @@
 </template>
 
 <style lang="less" scoped>
+@color-enhanced: rgb(255, 149, 0);
+
 .m-participants-main-container {
   position: relative;
   background-color: #fff;
@@ -75,7 +94,6 @@
 
   .participants-sift {
     display: flex;
-    transition: 500ms;
     width: 100%;
     gap: 5px;
     max-height: 500px;
@@ -88,6 +106,12 @@
       border: 1px solid #ddd;
       padding: 5px;
       cursor: pointer;
+      transition: 300ms;
+    }
+
+    .sift-enhanced {
+      border: 1px solid @color-enhanced;
+      color: @color-enhanced;
     }
   }
 
@@ -120,6 +144,7 @@
           border-radius: 5px;
           padding: 5px;
           cursor: pointer;
+          transition: 300ms;
 
           .icon {
             display: flex;
@@ -129,6 +154,11 @@
           img {
             width: 16px;
           }
+        }
+
+        .button-reverse {
+          background-color: #333;
+          color: #fff;
         }
       }
     }
@@ -146,7 +176,7 @@
       padding-right: 5px;
       height: 100%;
       overflow-y: scroll;
-      grid-template-columns: 3fr 2fr auto auto;
+      grid-template-columns: auto 4fr 3fr auto auto;
       column-gap: 10px;
       grid-auto-rows: 22px;
       row-gap: 15px;
@@ -157,24 +187,40 @@
         transition: 300ms;
         border-bottom: 2px dashed #eee;
         padding-bottom: 2px;
-        grid-column: 1/5;
+        grid-column: 1/6;
         grid-template-columns: subgrid;
         align-items: center;
 
+        div {
+          display: flex;
+          align-items: center;
+          gap: 1px;
+          pointer-events: none;
+        }
+
         .button {
           cursor: pointer;
-          transition: 300ms;
+          pointer-events: all;
           max-width: 16px;
+          transition: 300ms;
+        }
+
+        .change {
+          color: #999;
+        }
+
+        .group-edit {
+          pointer-events: all;
+          cursor: pointer;
         }
 
         .hidden {
           max-width: 0;
         }
 
-        div {
-          display: flex;
-          align-items: center;
-          gap: 2px;
+        .rotating {
+          color: @color-enhanced;
+          animation: animation-rotate 2s linear infinite;
         }
       }
 
@@ -235,6 +281,15 @@
 .module-focus {
   z-index: @z-index-module-focus;
 }
+
+@keyframes animation-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>
 
 <script setup>
@@ -245,6 +300,7 @@ import { Mail } from "lucide-vue-next";
 import { CircleX } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { DoorOpen } from "lucide-vue-next";
+import { RefreshCw } from "lucide-vue-next";
 import { ref } from "vue";
 
 const router = useRouter();
@@ -260,6 +316,18 @@ const condition = ref("全部");
 const editActive = ref(false);
 
 const siftButton = ref(false);
+
+const itemSelected = ref(null);
+
+const handleSift = (group) => {
+  if (!editActive.value) {
+    condition.value = group;
+    siftButton.value = false;
+  } else if (itemSelected.value) {
+    itemSelected.value.group = group;
+    itemSelected.value = null;
+  }
+};
 
 const dropMenu = ref(["全部", "参与者", "管理员", "志愿者", "活动负责人"]);
 

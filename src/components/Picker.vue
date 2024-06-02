@@ -106,7 +106,7 @@
   gap: 5px;
 
   .time-list {
-    border: 1px solid #666;
+    border: 1.5px dashed #666;
     border-radius: 5px 10px 5px 10px;
     padding: 0 5px;
     width: 100%;
