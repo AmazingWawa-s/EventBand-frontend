@@ -39,8 +39,8 @@
             @click="() => (addTodolist = !addTodolist)"
             :class="{ button: true, 'button-form': addTodolist }"
           >
-            <ClipboardPlus :size="20" />
             新建
+            <ClipboardPlus :size="20" />
           </div>
         </div>
         <div class="todolist-sub-frame">
@@ -251,6 +251,7 @@
         .button {
           width: 100%;
           display: flex;
+          user-select: none;
           align-items: center;
           justify-content: center;
           background-color: @todolist-form-color;

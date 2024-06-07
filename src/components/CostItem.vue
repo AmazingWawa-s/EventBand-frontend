@@ -1,10 +1,19 @@
 <template>
-  <div class="cost-item-main-container">
+  <div
+    :class="{
+      'cost-item-main-container': true,
+      rejected: passed == 'false',
+      passed: passed == 'true',
+    }"
+  >
+    <div v-show="passed == 'false'" class="sign"></div>
     <div class="top">
       <div class="left">
         <div class="info">
-          <div class="user"><UserRound :size="16" />{{ user }}</div>
-          <div class="reason"><WalletMinimal :size="16" />{{ reason }}</div>
+          <div class="user" :title="user"><UserRound :size="16" />{{ user }}</div>
+          <div class="reason" :title="reason">
+            <WalletMinimal :size="16" />{{ reason }}
+          </div>
         </div>
         <div class="cost">
           <span>￥</span>
@@ -12,21 +21,27 @@
         </div>
       </div>
       <div class="buttons">
-        <div v-if="passed == 'undo' || passed == 'true'" class="true button">
-          <Check />
+        <div
+          v-if="passed == 'undo' || passed == 'true'"
+          @click="handleConfirm(true)"
+          :class="{ button: true, active: confirm == 'true', fixed: passed != 'undo' }"
+        >
+          <!-- <Check /> -->
+          {{ confirm == "true" ? "确认" : "通过" }}
         </div>
         <div
           v-if="passed == 'undo' || passed == 'false'"
-          class="false button"
-          @click="remarkOpen = !remarkOpen"
+          :class="{ button: true, active: confirm == 'false', fixed: passed != 'undo' }"
+          @click="handleConfirm(false)"
         >
-          <X />
+          <!-- <X /> -->
+          {{ confirm == "false" ? "确认" : "驳回" }}
         </div>
       </div>
     </div>
     <div :class="{ bottom: true, isopened: remarkOpen || passed == 'false' }">
       <MessageSquareX :size="16" />
-      <input v-if="!remark" type="text" />
+      <input v-if="!remark" v-model="preRemark" type="text" placeholder="请输入原因" />
       {{ remark }}
     </div>
   </div>
@@ -36,10 +51,37 @@
 .cost-item-main-container {
   width: 100%;
   font-size: 16px;
-  border: 1.5px solid #666;
+  border: 1.5px solid #333;
   flex-shrink: 0;
   border-radius: 5px;
   padding: 5px;
+  position: relative;
+  overflow: hidden;
+
+  .sign {
+    position: absolute;
+    width: 300px;
+    height: 30px;
+    background-color: #eee;
+    top: 30%;
+    transform: translateY(-50%);
+    rotate: -25deg;
+    left: 0;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .sign::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 30px;
+    background-color: #eee;
+    top: 50%;
+    transform: translateY(-50%);
+    rotate: -90deg;
+    left: -40px;
+  }
 
   .top {
     display: grid;
@@ -53,14 +95,16 @@
       display: grid;
       grid-template-rows: subgrid;
       height: 100%;
-      background-color: #fff;
-      grid-template-columns: 3fr 1fr;
+      grid-template-columns: 1fr 80px;
 
       .info {
         height: 100%;
         grid-row: 1/3;
         display: grid;
         grid-template-rows: subgrid;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
         .user {
           display: flex;
@@ -94,20 +138,25 @@
       .button {
         height: 100%;
         width: 100%;
+        transition: 150ms;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 3px;
-        color: #fff;
+        background-color: #ffe3c4;
+        user-select: none;
+        color: rgb(255, 136, 0);
         cursor: pointer;
       }
 
-      .true {
-        background-color: #2cbd00;
+      .active {
+        background-color: rgb(255, 136, 0);
+        color: #fff;
       }
 
-      .false {
-        background-color: #ff4242;
+      .fixed {
+        background-color: #fff;
+        color: #333;
       }
     }
   }
@@ -133,6 +182,22 @@
     margin-top: 10px;
   }
 }
+
+.rejected {
+  // opacity: 0.8;
+  color: #888;
+  border: 1.5px solid #888;
+
+  .button {
+    pointer-events: none;
+  }
+}
+
+.passed {
+  .button {
+    pointer-events: none;
+  }
+}
 </style>
 
 <script setup>
@@ -142,7 +207,25 @@ import { Check } from "lucide-vue-next";
 import { X } from "lucide-vue-next";
 import { ref } from "vue";
 import { MessageSquareX } from "lucide-vue-next";
-
+const emit = defineEmits(["handleCostItem"]);
 const props = defineProps(["user", "cost", "reason", "passed", "remark"]);
 const remarkOpen = ref(false);
+const confirm = ref("undo");
+const preRemark = ref("");
+const handleConfirm = (flag) => {
+  if (
+    (confirm.value == "true" && flag) ||
+    (confirm.value == "false" && !flag && preRemark.value)
+  ) {
+    // props.passed = confirm.value;
+    // props.remark = preRemark.value;
+    emit("handleCostItem", confirm.value, preRemark.value);
+    preRemark.value = "";
+    remarkOpen.value = false;
+    confirm.value = "undo";
+  } else {
+    confirm.value = flag ? "true" : "false";
+    remarkOpen.value = !flag;
+  }
+};
 </script>

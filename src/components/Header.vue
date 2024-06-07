@@ -4,61 +4,27 @@
       <img class="icon" src="../assets/icon_logo_ver2.svg" alt="" />
     </div>
     <div class="header-middle">
-      <div class="middle-grid">
-        <div
-          :class="{
-            'middle-grid-scroll': true,
-            'notice-scroll': store.notice,
-            'trans-1': true,
-          }"
-        >
-          <p class="search-bar"></p>
-          <p class="notice">
-            <img
-              :class="{ 'wobble-hor-top': store.notice }"
-              src="../assets/notice.svg"
-              alt=""
-            />
-          </p>
-        </div>
-      </div>
-      <div class="middle-grid">
-        <div
-          :class="{
-            'middle-grid-scroll': true,
-            'notice-scroll': store.notice,
-            'trans-2': true,
-          }"
-        >
-          <input class="search-bar" type="text" />
-          <p class="notice">活动“计通学院春节联欢晚会”审核通过</p>
-        </div>
-      </div>
-      <div class="middle-grid">
-        <div
-          :class="{
-            'middle-grid-scroll': true,
-            'notice-scroll': store.notice,
-            'trans-3': true,
-          }"
-        >
-          <p class="search-bar">
-            <img src="../assets/search.svg" alt="" />
-          </p>
-          <p class="notice notice-button"><img src="../assets/confirm.svg" alt="" /></p>
-        </div>
+      <div class="search-bar">
+        <Search />
+        <div class="divide"></div>
+        <input type="text" placeholder="搜索活动" />
+        <div class="divide"></div>
+        <ArrowRight />
       </div>
     </div>
-    <div class="header-back">
-      <div @click="() => (store.notice = store.notice ? '' : '有消息')" class="user-bar">
-        <span>{{ store.userName }}</span>
-        <span>▼</span>
+    <div v-if="store.isLogin" class="header-back">
+      <div class="user-bar"><CircleUserRound />{{ store.userName }}</div>
+      <div class="menu-item">
+        <Bolt />
       </div>
-      <!-- <div class="user-menu">
-        <p>消息</p>
-        <p>设置</p>
-      </div> -->
+      <div class="menu-item">
+        <MessageSquareMore />
+      </div>
+      <div class="menu-item" @click="logoff">
+        <LogOut />
+      </div>
     </div>
+    <div v-else>登录</div>
   </div>
 </template>
 
@@ -69,236 +35,79 @@
   padding: @header-padding;
   position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   user-select: none;
   background-color: #fff;
+  justify-content: space-between;
   border-bottom: @header-border-bottom;
-
-  .appear {
-    top: 0;
-  }
 
   .header-front {
     height: 100%;
-  }
-
-  .header-middle {
-    margin: 0 10px;
-    flex-grow: 1;
-    max-width: 600px;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 5fr 1fr;
-    gap: 5px;
-    overflow: hidden;
-    position: relative;
-    z-index: @z-index-header;
-
-    .middle-grid {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      border-radius: @header-border-radius;
-
-      .middle-grid-scroll {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 201%;
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        overflow: hidden;
-        justify-items: center;
-        align-items: center;
-
-        img {
-          height: 1rem;
-          width: 1rem;
-          transition: 400ms;
-        }
-
-        input {
-          outline: none;
-          width: 100%;
-          height: 100%;
-          padding: 0 10px;
-          background: none;
-          border: none;
-        }
-
-        .search-bar {
-          padding-top: 1px;
-          display: flex;
-          align-items: center;
-        }
-
-        .notice {
-          position: relative;
-          box-shadow: @notice-box-shadow;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          padding: 10px;
-          align-items: center;
-          background: linear-gradient(
-            0deg,
-            rgba(0, 96, 28, 1) 0%,
-            rgb(48, 137, 69) 38%,
-            rgba(0, 117, 26, 1) 71%
-          );
-          color: rgb(68, 255, 21);
-          text-shadow: 0 0 1em rgb(37, 191, 55);
-          font-weight: 600;
-
-          img {
-            margin: 0 auto;
-            filter: drop-shadow(0 0 2px rgb(37, 191, 55));
-          }
-        }
-
-        .notice-button {
-          cursor: pointer;
-        }
-
-        .notice-button:hover {
-          img {
-            scale: 1.3;
-          }
-        }
-
-        .notice::after {
-          content: "";
-          position: absolute;
-          z-index: @z-index-header-scanlines;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: url("../assets/scanlines.png");
-          opacity: 0.1;
-        }
-      }
-
-      .notice-scroll {
-        top: -100%;
-      }
-
-      .trans-1 {
-        transition: 500ms;
-      }
-
-      .trans-2 {
-        transition: 700ms;
-      }
-
-      .trans-3 {
-        transition: 900ms;
-      }
-    }
-
-    .middle-grid::after {
-      position: absolute;
-      left: 0;
-      border-radius: @header-border-radius;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      content: "";
-      width: 100%;
-      height: 100%;
-      box-shadow: @middle-grid-box-shadow;
-      pointer-events: none;
-      z-index: @z-index-header-shadow;
-    }
   }
 
   .icon {
     height: 100%;
   }
 
-  .header-back {
-    height: 100%;
-    position: relative;
+  .header-middle {
+    width: 50%;
+    max-width: 500px;
 
-    .user-bar {
-      height: 100%;
-      font-size: 16px;
-      padding: 10px;
-      background-color: @theme-black;
+    .search-bar {
       display: flex;
       align-items: center;
-      color: #fff;
-      cursor: pointer;
-      border-radius: @header-border-radius;
+      gap: 5px;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #333;
+      padding: 5px;
+      border-radius: 10px;
+
+      input {
+        border: none;
+        padding: 0;
+        border-radius: 0;
+      }
+
+      .divide {
+        width: 5px;
+        border-radius: 10px;
+        height: 30px;
+        background-color: #ddd;
+      }
     }
   }
-}
 
-.wobble-hor-top {
-  -webkit-animation: wobble-hor-top 1.5s infinite both;
-  animation: wobble-hor-top 1.5s infinite both;
-}
+  .header-back {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-@-webkit-keyframes wobble-hor-top {
-  0%,
-  100% {
-    -webkit-transform: translateX(0%);
-    transform: translateX(0%);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-  }
-  15% {
-    -webkit-transform: translateX(-30px) rotate(6deg);
-    transform: translateX(-30px) rotate(6deg);
-  }
-  30% {
-    -webkit-transform: translateX(15px) rotate(-6deg);
-    transform: translateX(15px) rotate(-6deg);
-  }
-  45% {
-    -webkit-transform: translateX(-15px) rotate(3.6deg);
-    transform: translateX(-15px) rotate(3.6deg);
-  }
-  60% {
-    -webkit-transform: translateX(9px) rotate(-2.4deg);
-    transform: translateX(9px) rotate(-2.4deg);
-  }
-  75% {
-    -webkit-transform: translateX(-6px) rotate(1.2deg);
-    transform: translateX(-6px) rotate(1.2deg);
-  }
-}
+    .user-bar {
+      flex-shrink: 0;
+      font-size: 16px;
+      padding: 5px 5px 5px 5px;
+      border: 2px solid @theme-black;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      color: #333;
+      border-radius: 50px;
+    }
 
-@keyframes wobble-hor-top {
-  0%,
-  100% {
-    -webkit-transform: translateX(0%);
-    transform: translateX(0%);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-  }
-  15% {
-    -webkit-transform: translateX(-10px) rotate(6deg);
-    transform: translateX(-10px) rotate(6deg);
-  }
-  30% {
-    -webkit-transform: translateX(5px) rotate(-6deg);
-    transform: translateX(5px) rotate(-6deg);
-  }
-  45% {
-    -webkit-transform: translateX(-5px) rotate(3.6deg);
-    transform: translateX(-5px) rotate(3.6deg);
-  }
-  60% {
-    -webkit-transform: translateX(3px) rotate(-2.4deg);
-    transform: translateX(3px) rotate(-2.4deg);
-  }
-  75% {
-    -webkit-transform: translateX(-2px) rotate(1.2deg);
-    transform: translateX(-2px) rotate(1.2deg);
+    .menu-item {
+      transition: 300ms;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .menu-item:hover {
+      box-shadow: 0 -2px 0 #333 inset;
+    }
   }
 }
 </style>
@@ -307,5 +116,47 @@
 import Button from "./Button.vue";
 import Avator from "./Avator.vue";
 import { useStore } from "../store";
+import { LogOut } from "lucide-vue-next";
+import { MessageSquareMore } from "lucide-vue-next";
+import { Bolt } from "lucide-vue-next";
+import { ArrowRight } from "lucide-vue-next";
+import axios from "axios";
+import { ApiLogoff } from "../api";
+import { Search } from "lucide-vue-next";
+import { CircleUserRound } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+import { onMounted } from "vue";
+const router = useRouter();
+
 const store = useStore();
+
+onMounted(() => {
+  store.token = localStorage.getItem("token");
+  store.userName = localStorage.getItem("userName");
+  if (store.token && store.userName) {
+    store.isLogin = true;
+    router.push({
+      path: "/user",
+    });
+  }
+});
+
+const logoff = () => {
+  console.log("退出登录");
+
+  // ApiLogoff(store.token)
+  //   .then((res) => {
+  //     console.log(res);
+  localStorage.removeItem("token");
+  localStorage.removeItem("userName");
+  store.isLogin = false;
+  store.userName = null;
+  store.token = null;
+  router.push({
+    path: "/",
+  });
+  //   .catch((res) => {
+  //     console.log(res);
+  //   });
+};
 </script>

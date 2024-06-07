@@ -11,11 +11,11 @@
       </div>
       <div class="ecform-time ecform-item">
         时间偏好
-        <Picker />
+        <Picker ref="timePickerRef" />
       </div>
       <div class="ecform-place ecform-item">
         地点偏好
-        <Select />
+        <Select @addLocationId="addLocation()" />
       </div>
     </div>
     <div class="ecform-bottom ecform-item">
@@ -145,12 +145,41 @@ import Input from "../components/Input.vue";
 import Button from "../components/Button.vue";
 import Picker from "../components/Picker.vue";
 import Select from "../components/Select.vue";
-import { ref } from "vue";
+import { inject, reactive, ref } from "vue";
+import { ApiCreateEvent } from "../api";
+
+const timePickerRef = ref(null);
 
 const eventInfo = ref("");
 const eventName = ref("");
-const eventTime = ref("");
-const eventPlace = ref("");
+const eventPlace = new Set();
 
-const createEvent = () => {};
+const addLocation = (id, flag) => {
+  if (flag) {
+    eventPlace.add(id);
+  } else {
+    eventPlace.delete(id);
+  }
+  console.log(eventPlace, Array.from(eventPlace));
+};
+
+const createEvent = () => {
+  let token = localStorage.getItem("token");
+  let eventTime = timePickerRef.value.TimeSelected;
+  console.log(eventPlace);
+  if (eventName.value && eventInfo.value) {
+    ApiCreateEvent(
+      token,
+      eventTime.start,
+      eventTime.end,
+      eventTime.time1,
+      eventTime.time2,
+      eventName.value,
+      eventInfo.value,
+      Array.from(eventPlace)
+    ).then((res) => {
+      console.log(res);
+    });
+  }
+};
 </script>

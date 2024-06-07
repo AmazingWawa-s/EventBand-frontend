@@ -1,5 +1,5 @@
 <template>
-  <div class="select-main-container">
+  <div v-if="store.locationList" class="select-main-container">
     <div class="select-header" @mousewheel="ScaleSelectorScroll">
       人数：
       <div class="select-slide">
@@ -18,14 +18,14 @@
       <div class="place-menu" @mousewheel="PlaceSelectorScroll">
         <div
           :class="{ 'menu-item': true, 'menu-selected': i == selectMenu }"
-          v-for="(item, i) in menuList"
+          v-for="(item, i) in store.locationList"
           :key="item"
           @click="() => (selectMenu = i)"
         >
           <span class="menu-item-count">{{
             selectCount[i] == 0 ? "" : selectCount[i]
           }}</span>
-          <span>{{ item.place }}</span>
+          <span>{{ item.firstname }}</span>
         </div>
       </div>
       <div class="select-content">
@@ -34,10 +34,9 @@
             'content-item': true,
             'content-item-selected': item.select,
           }"
-          @click="() => (item.select = !item.select)"
-          v-for="item in menuList[selectMenu].menu"
+          @click="handleSelectLocation(item)"
+          v-for="item in store.locationList[selectMenu].list"
           :key="item"
-          v-show="item.size & (1 << selectScale)"
         >
           {{ item.name }}
           <CircleCheckBig :size="16" color="green" v-if="item.select" />
@@ -46,9 +45,21 @@
       </div>
     </div>
   </div>
+  <div v-else class="load-failure">场地列表加载失败<Annoyed /></div>
 </template>
 
 <style lang="less" scoped>
+.load-failure {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 5px;
+  color: #666;
+}
+
 .select-main-container {
   width: 100%;
   height: 100%;
@@ -204,14 +215,23 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { CircleDashed } from "lucide-vue-next";
 import { CircleCheckBig } from "lucide-vue-next";
+import { useStore } from "../store";
+import { Annoyed } from "lucide-vue-next";
 const selectScale = ref(0);
+const store = useStore();
+const emit = defineEmits(["addLocationId"]);
+
+const handleSelectLocation = (item) => {
+  item.select = !item.select;
+  emit("addLocationId", item.id, item.select);
+};
 
 const selectCount = computed(() => {
-  let arr = new Array(menuList.value.length);
-  for (let i = 0; i < menuList.value.length; i++) {
+  let arr = new Array(store.locationList.length);
+  for (let i = 0; i < store.locationList.length; i++) {
     let count = 0;
-    for (let index in menuList.value[i].menu) {
-      if (menuList.value[i].menu[index].select) {
+    for (let index in store.locationList[i].list) {
+      if (store.locationList[i].list[index].select) {
         count++;
       }
     }

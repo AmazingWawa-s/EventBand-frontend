@@ -1,15 +1,25 @@
 <template>
   <div class="eventlist-main-container">
-    <div class="eventlist-frame">
-      <div v-for="item in eventList" :key="item" class="eventlist-item-card">
-        <div class="title">{{ item.title }}</div>
-        <div class="time"><Clock :size="16" />{{ item.time }}</div>
-        <div class="place"><MapPinned :size="16" />{{ item.place }}</div>
+    <div v-if="!eventlist"></div>
+    <div v-else-if="eventlist.length > 0" class="eventlist-frame">
+      <div
+        v-for="item in eventlist"
+        :key="item"
+        @click="jumpToDetail(item.event_id)"
+        class="eventlist-item-card"
+      >
+        <div class="title">{{ item.event_name }}</div>
+        <div class="time"><Clock :size="16" />{{ item.event_start.split(":")[0] }}</div>
+        <div class="place"><MapPinned :size="16" />{{ item.event_location_id }}</div>
         <div class="end">
-          <div v-if="item.permit == 0" class="tag">
-            <UserRoundCog :size="16" />{{ item.ident }}
+          <div class="tag">
+            <UserRoundCog
+              v-if="item.eurelation_user_id == item.event_creator_id"
+              :size="16"
+            />
+            <UserRound v-else :size="16" />
+            {{ item.eurelation_role }}
           </div>
-          <div v-else class="tag"><UserRound :size="16" />{{ item.ident }}</div>
           <div v-if="item.state == 0" class="state prep">
             <Hourglass :size="16" />筹备中
           </div>
@@ -17,10 +27,48 @@
         </div>
       </div>
     </div>
+    <div v-else class="eventlist-empty">
+      <div class="msg">未加入任何活动<PackageOpen :size="36" /></div>
+      <div class="btn">立即寻找<CircleChevronRight /></div>
+    </div>
   </div>
 </template>
 
 <style lang="less" scoped>
+.eventlist-empty {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #666;
+
+  .msg {
+    font-size: 36px;
+    font-weight: 600;
+  }
+
+  .btn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    border: 2px solid #666;
+    padding: 10px;
+    border-radius: 5px;
+    gap: 5px;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .eventlist-main-container {
   width: 100%;
   overflow: hidden;
@@ -34,7 +82,7 @@
     display: grid;
     padding-right: 10px;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: auto;
+    grid-auto-rows: 40%;
     overflow-y: scroll;
     gap: 20px;
   }
@@ -167,57 +215,22 @@ import { CalendarCheck } from "lucide-vue-next";
 import { ref } from "vue";
 import { Clock } from "lucide-vue-next";
 import { UserRoundCog } from "lucide-vue-next";
+import { PackageOpen } from "lucide-vue-next";
 import { MapPinned } from "lucide-vue-next";
 import { UserRound } from "lucide-vue-next";
+import { CircleChevronRight } from "lucide-vue-next";
+import { useRouter } from "vue-router";
 
-const eventList = ref([
-  {
-    title: "大学生心理健康知识科普活动",
-    time: "2024/5/29 ~ 2024/5/30",
-    place: "学生活动中心",
-    ident: "创建者",
-    permit: 0,
-    state: 0,
-  },
-  {
-    title: "“一本书一部戏”系列讲座",
-    place: "学生活动中心",
-    time: "2024/5/23 19:00",
-    ident: "参与者",
-    permit: 1,
-    state: 1,
-  },
-  {
-    title: "2024年读者嘉年华活动",
-    place: "学生活动中心",
-    time: "2024/5/29 ~ 2024/5/30",
-    ident: "参与者",
-    permit: 1,
-    state: 0,
-  },
-  {
-    title: "“一本书一部戏”系列讲座",
-    place: "学生活动中心",
-    time: "2024/5/23 19:00",
-    ident: "创建者",
-    permit: 0,
-    state: 1,
-  },
-  {
-    title: "大学生心理健康知识科普活动",
-    place: "学生活动中心",
-    time: "2024/5/29~2024/5/30",
-    ident: "创建者",
-    permit: 0,
-    state: 0,
-  },
-  {
-    title: "“一本书一部戏”系列讲座",
-    place: "学生活动中心",
-    time: "2024/5/23 19:00",
-    ident: "参与者",
-    permit: 1,
-    state: 1,
-  },
-]);
+const props = defineProps(["eventlist"]);
+
+const router = useRouter();
+
+const jumpToDetail = (id) => {
+  router.push({
+    path: "/eventDetail",
+    query: {
+      id: id,
+    },
+  });
+};
 </script>

@@ -78,7 +78,7 @@
     gap: 5px;
 
     .calendar-past {
-      color: #ccc;
+      color: #aaa;
     }
 
     .calendar-item {
@@ -90,7 +90,7 @@
       cursor: pointer;
       background-color: #eee;
       border-radius: 10px;
-      padding: 5px;
+      padding: 3px;
       pointer-events: none;
       transition: 300ms;
       font-weight: 600;
@@ -100,11 +100,11 @@
     }
 
     .calendar-item-sub {
-      background-color: #fff;
       pointer-events: all;
       width: 100%;
       height: 100%;
-      border-radius: 5px;
+      position: relative;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -116,6 +116,7 @@
 
     .calendar-selected {
       background-color: #666;
+      color: #fff;
     }
   }
 }

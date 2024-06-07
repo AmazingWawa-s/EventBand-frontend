@@ -3,14 +3,22 @@
     <div class="time-list">
       <span>
         {{
-          selectArr[picker1] == "--" ? "" : selectArr[picker1] + "~" + selectArr[picker2]
+          selectArr[picker1] == "--"
+            ? ""
+            : TimeSelected.start.month +
+              "/" +
+              TimeSelected.start.day +
+              "~" +
+              TimeSelected.end.month +
+              "/" +
+              TimeSelected.end.day
         }}
       </span>
       <span>
         {{
           selectArr[picker3] == "--"
             ? ""
-            : selectArr2[picker3] + "~" + selectArr2[picker4]
+            : TimeSelected.time1.hour + ":00" + "~" + TimeSelected.time2.hour + ":00"
         }}
       </span>
     </div>
@@ -30,7 +38,7 @@
             v-for="(item, index) in selectArr"
             :key="item"
           >
-            {{ item }}
+            {{ item == "--" ? item : item.month + "/" + item.day }}
           </div>
         </div>
       </div>
@@ -50,7 +58,7 @@
             v-for="(item, index) in selectArr"
             :key="item"
           >
-            {{ item }}
+            {{ item == "--" ? item : item.month + "/" + item.day }}
           </div>
         </div>
       </div>
@@ -66,7 +74,7 @@
             v-for="(item, index) in selectArr2"
             :key="item"
           >
-            {{ item }}
+            {{ item == "--" ? item : item.hour + ":00" }}
           </div>
         </div>
       </div>
@@ -86,7 +94,7 @@
             v-for="(item, index) in selectArr2"
             :key="item"
           >
-            {{ item }}
+            {{ item == "--" ? item : item.hour + ":00" }}
           </div>
         </div>
       </div>
@@ -205,41 +213,53 @@ const picker1 = ref(0);
 const picker2 = ref(0);
 const picker3 = ref(0);
 const picker4 = ref(0);
-const selectArr = ref([
-  "--",
-  "5/20",
-  "5/21",
-  "5/22",
-  "5/23",
-  "5/24",
-  "5/25",
-  "5/26",
-  "5/27",
-  "5/28",
-  "5/29",
-  "5/30",
-  "5/31",
-]);
+const TimeSelected = computed(() => {
+  return {
+    start: {
+      year: selectArr.value[picker1.value].year,
+      month: selectArr.value[picker1.value].month,
+      day: selectArr.value[picker1.value].day,
+    },
+    end: {
+      year: selectArr.value[picker2.value].year,
+      month: selectArr.value[picker2.value].month,
+      day: selectArr.value[picker2.value].day,
+    },
+    time1: {
+      hour: selectArr2.value[picker3.value].hour,
+      minute: selectArr2.value[picker3.value].minute,
+    },
+    time2: {
+      hour: selectArr2.value[picker4.value].hour,
+      minute: selectArr2.value[picker4.value].minute,
+    },
+  };
+});
 
-const selectArr2 = ref([
-  "--",
-  "8:00",
-  "9:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-  "23:00",
-]);
+defineExpose({
+  TimeSelected,
+});
+
+onMounted(() => {
+  let date = new Date();
+  for (let i = 0; i < 14; i++) {
+    selectArr.value.push({
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+    });
+    date.setDate(date.getDate() + 1);
+  }
+  for (let i = 0; i < 15; i++) {
+    selectArr2.value.push({
+      hour: i + 8,
+      minute: 0,
+    });
+  }
+});
+const selectArr = ref(["--"]);
+
+const selectArr2 = ref(["--"]);
 
 const scrollPicker = (picker, index) => {
   if (index < 0) {

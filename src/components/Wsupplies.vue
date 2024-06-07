@@ -1,9 +1,9 @@
 <template>
   <div class="w-supplies-main-container">
     <div class="header">
-      <input type="text" />
-      <input type="number" min="1" value="1" />
-      <div class="button"><PackagePlus /></div>
+      <input v-model="supplyName" type="text" />
+      <input v-model="amount" type="number" min="1" value="1" />
+      <div class="button" @click="addSupply"><PackagePlus /></div>
     </div>
     <div class="body">
       <div class="header">
@@ -15,7 +15,13 @@
         <div class="supply-item" v-for="item in supplies" :key="item">
           <div>{{ item.name }}</div>
           <div class="end">{{ item.amount }}</div>
-          <div class="end">
+          <div
+            class="end"
+            :style="{
+              cursor: 'pointer',
+            }"
+            @click="item.ready = !item.ready"
+          >
             <div class="state-ready" v-if="item.ready">就绪</div>
             <div class="state-no" v-else>缺少</div>
           </div>
@@ -27,6 +33,7 @@
 
 <style lang="less" scoped>
 .w-supplies-main-container {
+  user-select: none;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -64,7 +71,7 @@
 
     .button::after {
       content: "";
-      transition: 300ms;
+      transition: 100ms;
       z-index: 1;
       border-radius: 5px;
       position: absolute;
@@ -77,7 +84,7 @@
       left: 2px;
     }
 
-    .button::after:hover {
+    .button:active::after {
       top: 0;
       left: 0;
     }
@@ -153,44 +160,22 @@
 
 <script setup>
 import { PackagePlus } from "lucide-vue-next";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import { Check } from "lucide-vue-next";
 import { X } from "lucide-vue-next";
-const supplies = ref([
-  {
-    name: "麦克风",
-    amount: 9,
-    ready: true,
-  },
-  {
-    name: "音箱",
-    amount: 2,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-]);
+
+const supplies = inject("supplies");
+const supplyName = ref("");
+const amount = ref(1);
+const addSupply = () => {
+  if (supplyName.value) {
+    supplies.unshift({
+      name: supplyName.value,
+      amount: amount.value,
+      ready: false,
+    });
+    supplyName.value = "";
+    amount.value = 1;
+  }
+};
 </script>

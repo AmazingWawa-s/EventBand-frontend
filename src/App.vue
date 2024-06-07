@@ -1,5 +1,6 @@
 <template>
   <div class="application">
+    <SystemInform />
     <Header />
     <div class="main-view">
       <router-view />
@@ -76,4 +77,7 @@ textarea {
 
 <script setup>
 import Header from "./components/Header.vue";
+import { useStore } from "./store";
+import SystemInform from "./components/SystemInform.vue";
+const store = useStore();
 </script>

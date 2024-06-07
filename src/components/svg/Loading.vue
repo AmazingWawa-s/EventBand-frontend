@@ -1,34 +1,119 @@
 <template>
-  <svg class="loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 531.94 531.94">
-    <g id="图层_2" data-name="图层 2">
-      <g id="rabbit" class="rabbit jello-horizontal">
-        <path
-          class="cls-1"
-          d="M449.91,363.46c-8.72-5.8-12.53-16-9.41-25.37,21.54-64.88,36-124.31,42.17-176.74,2.74-23.15-2.17-43.39-13.59-55.52-7.2-7.65-16.42-11.65-27.39-11.87-33.45-.66-41.05,26.07-42.76,37.55-.69,4.65-.24,21.34.32,42.46,1,36.64,2.23,86.82-.29,133.16-.66,11.94-11.33,21.14-24.29,21a26.47,26.47,0,0,1-6.72-1A381.54,381.54,0,0,0,266.4,313.78a381.52,381.52,0,0,0-101.54,13.36,26.47,26.47,0,0,1-6.72,1c-13,.17-23.63-9-24.29-21-2.52-46.33-1.26-96.51-.29-133.15.56-21.13,1-37.81.31-42.47C132.17,120,124.57,93.3,91.12,94c-11,.22-20.19,4.22-27.39,11.87C52.31,118,47.4,138.21,50.14,161.35c6.19,52.44,20.63,111.86,42.17,176.74,3.12,9.38-.69,19.57-9.41,25.37-26.89,17.87-46.28,39-57.37,61.69v.4a80.94,80.94,0,0,0,80.86,80.85H478.74a27.69,27.69,0,0,0,27.66-27.66V423.37C495.18,401.36,476.1,380.86,449.91,363.46Zm-271.3,81.47C167.17,455.16,158,435.39,162.78,411c-4.7-24.18,4.61-43.75,16-33.76,11.45-10.23,20.64,9.15,15.83,33.43C199.3,435,190,454.91,178.61,444.93Zm175.78,0c-11.39,10-20.69-10-16-34.22-4.82-24.28,4.38-43.66,15.83-33.43,11.39-10,20.7,9.59,16,33.76C375,435.39,365.83,455.16,354.39,444.93Z"
-        />
-      </g>
-      <g id="frame" class="frame">
-        <path
-          class="cls-1"
-          d="M425.55,0H53.19A53.2,53.2,0,0,0,0,53.19V425.55A106.39,106.39,0,0,0,106.39,531.94H478.74a53.2,53.2,0,0,0,53.2-53.2V106.39A106.39,106.39,0,0,0,425.55,0Zm93.62,478.74a40.48,40.48,0,0,1-40.43,40.43H106.39a93.73,93.73,0,0,1-93.62-93.62V53.19A40.48,40.48,0,0,1,53.19,12.77H425.55a93.73,93.73,0,0,1,93.62,93.62Z"
-        />
-      </g>
-    </g>
-  </svg>
+  <div class="lds-spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 </template>
 
 <style lang="less" scoped>
+.lds-spinner,
+.lds-spinner div,
+.lds-spinner div:after {
+  box-sizing: border-box;
+}
+.lds-spinner {
+  color: currentColor;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-spinner div {
+  transform-origin: 40px 40px;
+  animation: lds-spinner 1.2s linear infinite;
+}
+.lds-spinner div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 3.2px;
+  left: 36.8px;
+  width: 6.4px;
+  height: 17.6px;
+  border-radius: 20%;
+  background: currentColor;
+}
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
+}
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .loading {
   width: 200px;
   height: 200px;
 }
 
-.frame{
-    overflow: hidden;
-    padding:20px;
+.frame {
+  overflow: hidden;
+  border-radius: 50px;
+  border: 2px solid red;
+  position: relative;
 }
 
 .rabbit {
+  position: absolute;
   transform-origin: 266px 532px;
 }
 

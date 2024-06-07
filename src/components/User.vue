@@ -1,5 +1,5 @@
 <template>
-  <div class="user-main-container">
+  <div v-if="!loading" class="user-main-container">
     <div class="grid-calendar grid-item">
       <Calendar />
     </div>
@@ -19,18 +19,31 @@
             <EventCreateForm />
           </div>
           <div class="grid-events-list">
-            <EventList />
+            <EventList :eventlist="eventList" />
           </div>
         </div>
       </div>
-      <div @click="createEvent" class="grid-events-create-button">
+      <div @click="isSlide = !isSlide" class="grid-events-create-button">
         <CreateButton />
       </div>
+    </div>
+  </div>
+  <div class="loading" v-else>
+    <div>
+      <Loading />
     </div>
   </div>
 </template>
 
 <style lang="less" scoped>
+.loading {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .user-main-container {
   position: relative;
   z-index: @z-index-body;
@@ -127,7 +140,27 @@ import EventCreateForm from "../components/EventCreateForm.vue";
 import EventList from "../components/EventList.vue";
 import CreateButton from "../components/svg/CreateButton.vue";
 import { useRouter } from "vue-router";
-import { ref, reactive, provide } from "vue";
+import { ref, reactive, provide, onMounted } from "vue";
+import { ApiLoadUserPage } from "../api";
+import Loading from "../components/svg/Loading.vue";
+import { useStore } from "../store";
+
+const eventList = ref();
+const store = useStore();
+const loading = ref(true);
+
+onMounted(() => {
+  let token = localStorage.getItem("token");
+  console.log(token);
+  ApiLoadUserPage(token).then((res) => {
+    console.log(res);
+    const { eventlist, locationlist } = res.data.data;
+    eventList.value = eventlist;
+    store.locationList = locationlist;
+    loading.value = false;
+  });
+});
+
 const router = useRouter();
 const isSlide = ref(false);
 
@@ -140,14 +173,4 @@ const checkedDate = reactive({
 });
 
 provide("checkedDate", checkedDate);
-
-const jumpToEventDetail = () => {
-  router.push({
-    path: "/eventDetail",
-  });
-};
-
-const createEvent = () => {
-  isSlide.value = !isSlide.value;
-};
 </script>
