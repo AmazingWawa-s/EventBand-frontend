@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = 'http://192.168.43.66:8000'
+const BASE_URL = 'http://192.168.43.67:8000'
 // const LOGIN = `${BASE_URL}/login/`
 const LOGIN = 'api/login/'
 const REGISTER = 'api/register/'
@@ -10,6 +10,14 @@ const SUPERLOGIN = 'api/superlogin/'
 const CREATEEVENT = 'api/createevent/private/'
 const LOADUSERPAGE = 'api/loaduserpage/'
 const EVENTDETAIL = 'api/eventdetail/'
+const INVITE = 'api/invite/'
+const JOINEVENT = 'api/joinevent/'
+const PUBLICEVENTS = 'api/publicevents/'
+const GETEXAMINEEVENTS = 'api/getexamineevents/'
+const DELETEPARTICIPANT = 'api/deleteparticipant/'
+const EXAMINE = 'api/examine/'
+const WIDTHDRAW = 'api/withdraw/'
+const TEST = 'api/test/'
 
 export function ApiLogin(name, password) {
     console.log('request:', LOGIN);
@@ -70,21 +78,25 @@ export function ApiSuperlogin(name, password) {
     })
 }
 
-export function ApiCreateEvent(token, eventStartDate, eventEndDate, eventStartTime, eventEndTime, eventName, eventDescription, eventLocationId) {
+export function ApiCreateEvent(token, eventStartDate, eventEndDate, eventStartTime, eventEndTime, eventName, eventDescription, eventLocationId, personNum) {
     console.log('request:', CREATEEVENT);
+    let data = {
+        userToken: token,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventStartTime: eventStartTime,
+        eventEndTime: eventEndTime,
+        eventName: eventName,
+        eventDescription: eventDescription,
+        eventLocation: eventLocationId,
+        eventType: 0,
+        personNum: personNum
+    }
+    console.log(data)
     return axios({
         url: CREATEEVENT,
         method: 'post',
-        data: {
-            userToken: token,
-            eventStartDate: eventStartDate,
-            eventEndDate: eventEndDate,
-            eventStartTime: eventStartTime,
-            eventEndTime: eventEndTime,
-            eventName: eventName,
-            eventDescription: eventDescription,
-            eventLocationId: eventLocationId
-        }
+        data: data
     })
 }
 
@@ -108,6 +120,100 @@ export function ApiEventDetail(token, id) {
         data: {
             userToken: token,
             eventId: id
+        }
+    })
+}
+
+export function ApiInvite(token, id) {
+    console.log('request', INVITE);
+    return axios({
+        url: INVITE,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: id
+        }
+    })
+}
+
+export function ApiJoinEvent(token, inviteCode) {
+    console.log('request', JOINEVENT);
+    return axios({
+        url: JOINEVENT,
+        method: 'post',
+        data: {
+            userToken: token,
+            inviteCode: inviteCode
+        }
+    })
+}
+
+export function ApiPublicEvents(token) {
+    console.log('request', PUBLICEVENTS);
+    return axios({
+        url: PUBLICEVENTS,
+        method: 'post',
+        data: {
+            userToken: token
+        }
+    })
+}
+
+export function ApiGetexamineevents(token) {
+    console.log('request', GETEXAMINEEVENTS);
+    return axios({
+        url: GETEXAMINEEVENTS,
+        method: 'post',
+        data: {
+            userToken: token
+        }
+    })
+}
+
+export function ApiExamine(token, id) {
+    console.log('request', EXAMINE);
+    return axios({
+        url: EXAMINE,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: id
+        }
+    })
+}
+
+export function ApiDeleteParticipant(token, userId, eventId) {
+    console.log('request', DELETEPARTICIPANT);
+    return axios({
+        url: DELETEPARTICIPANT,
+        method: 'post',
+        data: {
+            userToken: token,
+            userId: userId,
+            eventId: eventId
+        }
+    })
+}
+
+export function ApiWithdraw(token, eventId) {
+    console.log('request', WIDTHDRAW);
+    return axios({
+        url: WIDTHDRAW,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId
+        }
+    })
+}
+
+export function ApiTest(token) {
+    console.log('request', TEST);
+    return axios({
+        url: TEST,
+        method: 'post',
+        data: {
+            userToken: token
         }
     })
 }

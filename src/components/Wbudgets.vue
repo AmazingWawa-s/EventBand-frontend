@@ -24,7 +24,19 @@
           </div>
         </div>
       </div>
-      <div class="button" @click="costlist.budget += 500">修改预算</div>
+      <div class="button" @click="changeBudget = !changeBudget">修改预算</div>
+    </div>
+    <div :class="{ 'change-budget': true, 'open-change-budget': changeBudget }">
+      <input type="number" v-model="newBudget" />
+      <div
+        class="btn"
+        @click="
+          costlist.budget = newBudget;
+          changeBudget = false;
+        "
+      >
+        <Check />
+      </div>
     </div>
     <div class="body">
       <div class="body-header">
@@ -58,7 +70,7 @@
   padding: 10px;
   display: grid;
   gap: 10px;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
 
   .header {
     font-family: "Consolas";
@@ -139,6 +151,42 @@
     }
   }
 
+  .change-budget {
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    overflow: hidden;
+    gap: 10px;
+    max-height: 0;
+    padding: 0 5px;
+
+    input {
+      border: 1.5px solid #333;
+      border-radius: 5px;
+    }
+    transition: 300ms;
+
+    .btn {
+      display: flex;
+      background-color: orange;
+      color: #fff;
+      height: 100%;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 300ms;
+    }
+
+    .btn:hover {
+      background-color: rgb(255, 153, 0);
+    }
+  }
+
+  .open-change-budget {
+    max-height: 200px;
+  }
+
   .body {
     overflow: hidden;
     display: grid;
@@ -182,10 +230,16 @@
 </style>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import CostItem from "../components/CostItem.vue";
 import { CirclePlus } from "lucide-vue-next";
 import { TriangleAlert } from "lucide-vue-next";
+import { Check } from "lucide-vue-next";
 
 const costlist = inject("costList");
+const changeBudget = ref(false);
+const newBudget = ref(0);
+onMounted(() => {
+  newBudget.value = costlist.budget;
+});
 </script>

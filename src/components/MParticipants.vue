@@ -73,7 +73,11 @@
       <div class="bottom-item new" @click="jumpToChatRoom">
         <DoorOpen :size="20" />进入聊天室
       </div>
-      <div class="setting"></div>
+      <div class="setting">
+        <input type="text" placeholder="新建分组" />
+        <div class="divide"></div>
+        <div class="btn"><Plus /></div>
+      </div>
     </div>
   </div>
 </template>
@@ -267,6 +271,34 @@
     .setting {
       grid-area: c;
       font-size: 16px;
+      display: flex;
+      white-space: nowrap;
+      gap: 5px;
+      align-items: center;
+      border: 2px solid #aaa;
+      background-color: #eee;
+      padding: 5px;
+      border-radius: 5px;
+
+      .divide {
+        width: 5px;
+        height: 80%;
+        background-color: #aaa;
+        border-radius: 10px;
+      }
+
+      input {
+        border: 0;
+        background-color: #eee;
+        padding: 0;
+        font-size: 16px;
+        height: 28px;
+        border-radius: 0;
+      }
+
+      .btn {
+        cursor: pointer;
+      }
     }
   }
 
@@ -305,6 +337,9 @@ import { DoorOpen } from "lucide-vue-next";
 import { RefreshCw } from "lucide-vue-next";
 import { ref } from "vue";
 import { useStore } from "../store";
+import { Plus } from "lucide-vue-next";
+
+const props = defineProps(["eventId"]);
 
 const router = useRouter();
 const store = useStore();
@@ -318,6 +353,9 @@ const jumpToChatRoom = () => {
 const openInvite = () => {
   store.systemInform = {
     type: "INVITE",
+    data: {
+      eventId: props.eventId,
+    },
   };
 };
 

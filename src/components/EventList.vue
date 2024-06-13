@@ -1,5 +1,15 @@
 <template>
   <div class="eventlist-main-container">
+    <div class="header">
+      <div class="invite-code">
+        <TicketPlus />
+        <div class="divide"></div>
+        <input type="text" v-model="inviteCode" placeholder="输入邀请码" />
+        <div class="divide"></div>
+        <ArrowRight @click="handleJoin" class="btn" />
+      </div>
+      <div v-if="codeMsg" class="codemsg">{{ codeMsg }} <Frown :size="18" /></div>
+    </div>
     <div v-if="!eventlist"></div>
     <div v-else-if="eventlist.length > 0" class="eventlist-frame">
       <div
@@ -29,7 +39,7 @@
     </div>
     <div v-else class="eventlist-empty">
       <div class="msg">未加入任何活动<PackageOpen :size="36" /></div>
-      <div class="btn">立即寻找<CircleChevronRight /></div>
+      <div class="btn" @click="jumpToSearch">立即寻找<CircleChevronRight /></div>
     </div>
   </div>
 </template>
@@ -74,7 +84,53 @@
   overflow: hidden;
   user-select: none;
   padding: 10px 5px 10px 10px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
   height: 100%;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .codemsg {
+      color: @theme-color;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+  }
+
+  .invite-code {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-self: start;
+    justify-content: flex-start;
+    border: 2px dashed #333;
+    border-radius: 5px;
+    gap: 5px;
+    padding: 0 5px;
+
+    .divide {
+      width: 5px;
+      height: 80%;
+      border-radius: 10px;
+      background-color: orange;
+    }
+
+    input {
+      border: none;
+      height: 100%;
+      padding: 0;
+    }
+
+    .btn {
+      cursor: pointer;
+    }
+  }
 
   .eventlist-frame {
     height: 100%;
@@ -82,7 +138,7 @@
     display: grid;
     padding-right: 10px;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 40%;
+    grid-auto-rows: 150px;
     overflow-y: scroll;
     gap: 20px;
   }
@@ -187,7 +243,6 @@
 
     .ready {
       border: 2px solid #333;
-      // background-color: lightgreen;
     }
 
     .prep {
@@ -213,17 +268,41 @@
 import { Hourglass } from "lucide-vue-next";
 import { CalendarCheck } from "lucide-vue-next";
 import { ref } from "vue";
+import { Frown } from "lucide-vue-next";
 import { Clock } from "lucide-vue-next";
+import { ArrowRight } from "lucide-vue-next";
+import { TicketPlus } from "lucide-vue-next";
 import { UserRoundCog } from "lucide-vue-next";
 import { PackageOpen } from "lucide-vue-next";
 import { MapPinned } from "lucide-vue-next";
 import { UserRound } from "lucide-vue-next";
 import { CircleChevronRight } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { ApiJoinEvent } from "../api";
 
 const props = defineProps(["eventlist"]);
 
 const router = useRouter();
+
+const codeMsg = ref("");
+
+const inviteCode = ref();
+
+const handleJoin = () => {
+  let token = localStorage.getItem("token");
+  if (inviteCode.value) {
+    ApiJoinEvent(token, inviteCode.value).then((res) => {
+      console.log(res);
+      const { eventId } = res.data;
+      if (eventId) {
+        jumpToDetail(eventId);
+        codeMsg.value = "";
+      } else {
+        codeMsg.value = "邀请码输入错误";
+      }
+    });
+  }
+};
 
 const jumpToDetail = (id) => {
   router.push({
@@ -231,6 +310,12 @@ const jumpToDetail = (id) => {
     query: {
       id: id,
     },
+  });
+};
+
+const jumpToSearch = () => {
+  router.push({
+    path: "/search",
   });
 };
 </script>

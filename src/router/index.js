@@ -26,6 +26,11 @@ const routes = [
         path: '/chatRoom',
         name: 'chatRoom',
         component: () => import('../components/ChatRoom.vue')
+    },
+    {
+        path: '/search',
+        name: 'search',
+        component: () => import('../components/Search.vue')
     }
 ]
 

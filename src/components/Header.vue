@@ -7,14 +7,16 @@
       <div class="search-bar">
         <Search />
         <div class="divide"></div>
-        <input type="text" placeholder="搜索活动" />
+        <input type="text" v-model="keyWord" placeholder="搜索活动" />
         <div class="divide"></div>
-        <ArrowRight />
+        <ArrowRight class="button" @click="jumpToSearch" />
       </div>
     </div>
     <div v-if="store.isLogin" class="header-back">
-      <div class="user-bar"><CircleUserRound />{{ store.userName }}</div>
-      <div class="menu-item">
+      <div class="user-bar" @click="jumpToUser">
+        <CircleUserRound />{{ store.userName }}
+      </div>
+      <div @click="test" class="menu-item">
         <Bolt />
       </div>
       <div class="menu-item">
@@ -24,7 +26,10 @@
         <LogOut />
       </div>
     </div>
-    <div v-else>登录</div>
+    <div></div>
+    <!-- <div class="header-back" v-else>
+      <div class="menu-item">登录<LogIn /></div>
+    </div> -->
   </div>
 </template>
 
@@ -63,6 +68,10 @@
       padding: 5px;
       border-radius: 10px;
 
+      .button {
+        cursor: pointer;
+      }
+
       input {
         border: none;
         padding: 0;
@@ -83,6 +92,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-right: 5px;
 
     .user-bar {
       flex-shrink: 0;
@@ -93,6 +103,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 5px;
+      cursor: pointer;
       color: #333;
       border-radius: 50px;
     }
@@ -120,33 +131,89 @@ import { LogOut } from "lucide-vue-next";
 import { MessageSquareMore } from "lucide-vue-next";
 import { Bolt } from "lucide-vue-next";
 import { ArrowRight } from "lucide-vue-next";
+import { LogIn } from "lucide-vue-next";
 import axios from "axios";
-import { ApiLogoff } from "../api";
+import { ApiLogoff, ApiTest } from "../api";
 import { Search } from "lucide-vue-next";
 import { CircleUserRound } from "lucide-vue-next";
 import { useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 const router = useRouter();
 
 const store = useStore();
 
+const keyWord = ref("");
+
 onMounted(() => {
   store.token = localStorage.getItem("token");
   store.userName = localStorage.getItem("userName");
-  if (store.token && store.userName) {
-    store.isLogin = true;
+  if (!store.token || !store.userName) {
+    store.isLogin = false;
     router.push({
-      path: "/user",
+      path: "/",
+    });
+  } else {
+    store.isLogin = true;
+
+    const ws = new WebSocket("wsUrl/ws/notifications" + "/");
+
+    ws.addEventListener("message", (e) => {
+      const data = JSON.parse(e.data);
+      console.log(e);
+      // if (type === 0) {
+      //   chatList.userLogin(sender);
+      // } else if (type === 1) {
+      //   chatList.userLogout(sender);
+      // } else if (type === 2) {
+      //   if (sender === store.getUniqueName()) {
+      //     return;
+      //   }
+      //   if (receiver === "大厅") {
+      //     chatList.addChats("大厅", data);
+      //   } else {
+      //     chatList.addChats(sender, data);
+      //   }
+      // } else if (type === 3) {
+      //   chatList.initUserList(content);
+      // }
+    });
+
+    ws.addEventListener("open", () => {
+      console.log("连接websocket");
+      const token = localStorage.getItem("token");
+      const msg = {
+        content: "login",
+        userToken: token,
+        timeStamp: Date.now(),
+      };
+      ws.send(JSON.stringify(msg));
+    });
+
+    ws.addEventListener("close", () => {
+      const token = localStorage.getItem("token");
+      const msg = {
+        content: "logoff",
+        userToken: token,
+        timeStamp: Date.now(),
+      };
+      ws.send(JSON.stringify(msg));
+    });
+
+    ws.addEventListener("error", (res) => {
+      console.log(res);
     });
   }
 });
 
+const test = () => {
+  let token = localStorage.getItem("token");
+  ApiTest(token).then((res) => {
+    console.log(res);
+  });
+};
+
 const logoff = () => {
   console.log("退出登录");
-
-  // ApiLogoff(store.token)
-  //   .then((res) => {
-  //     console.log(res);
   localStorage.removeItem("token");
   localStorage.removeItem("userName");
   store.isLogin = false;
@@ -155,8 +222,21 @@ const logoff = () => {
   router.push({
     path: "/",
   });
-  //   .catch((res) => {
-  //     console.log(res);
-  //   });
+};
+
+const jumpToSearch = () => {
+  router.push({
+    path: "/search",
+    query: {
+      keyword: keyWord.value,
+    },
+  });
+  keyWord.value = "";
+};
+
+const jumpToUser = () => {
+  router.push({
+    path: "/user",
+  });
 };
 </script>

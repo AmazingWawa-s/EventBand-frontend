@@ -6,6 +6,6 @@ export const useStore = defineStore('id', {
         token: '',
         systemInform: '', //type:INVITE,
         userName: '',
-        locationList: null 
+        locationList: null,
     }),
 })

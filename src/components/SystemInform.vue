@@ -7,11 +7,14 @@
         </div>
       </div>
       <div class="body">
-        <div v-if="store.systemInform.type == 'INVITE'">
-          <div>邀请码
-            abc
+        <div class="body-frame" v-if="store.systemInform.type == 'INVITE'">
+          <div class="invite-code" @click="copyCode">
+            <div>{{ code ? code : "生成邀请码" }}</div>
+            <div class="divide"></div>
+            <Copy v-if="!copy" :size="28" />
+            <CopyCheck v-else :size="28" />
           </div>
-          
+          <div>{{ copy ? "复制成功" : "点击复制，分享给好友" }}</div>
         </div>
       </div>
     </div>
@@ -59,13 +62,44 @@
 
       .close:hover {
         color: #fff;
-        background-color: @theme-color;
+        background-color: rgb(255, 106, 93);
       }
     }
 
     .body {
       width: 100%;
       height: 100%;
+      .body-frame {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+
+        .invite-code {
+          display: flex;
+          align-items: center;
+          font-size: 28px;
+          gap: 5px;
+          border: 2px solid #666;
+          padding: 10px;
+          border-radius: 10px;
+          cursor: pointer;
+
+          .divide {
+            width: 5px;
+            height: 100%;
+            background-color: #eee;
+            border-radius: 10px;
+          }
+
+          .btn {
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
 }
@@ -79,9 +113,34 @@
 <script setup>
 import { useStore } from "../store";
 import { X } from "lucide-vue-next";
+import { Copy } from "lucide-vue-next";
+import { CopyCheck } from "lucide-vue-next";
+import { ref } from "vue";
+import { ApiInvite } from "../api";
 const store = useStore();
-
+const code = ref("");
+const copy = ref(false);
 const closeInform = () => {
   store.systemInform = "";
+};
+
+const requestInviteCode = () => {};
+
+const copyCode = () => {
+  let token = localStorage.getItem("token");
+
+  if (!code.value && store.systemInform.data.eventId) {
+    ApiInvite(token, store.systemInform.data.eventId).then((res) => {
+      console.log(res);
+      const { inviteCode } = res.data;
+      code.value = inviteCode;
+    });
+  } else {
+    navigator.clipboard.writeText(code.value);
+    copy.value = true;
+    setTimeout(() => {
+      copy.value = false;
+    }, 2000);
+  }
 };
 </script>

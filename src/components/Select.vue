@@ -10,7 +10,7 @@
           @click="() => (selectScale = i)"
           :key="i"
         >
-          {{ i == selectScale ? item : "" }}
+          {{ i == selectScale ? item.desc : "" }}
         </div>
       </div>
     </div>
@@ -37,6 +37,7 @@
           @click="handleSelectLocation(item)"
           v-for="item in store.locationList[selectMenu].list"
           :key="item"
+          :title="item.description + '\n容纳量：' + item.size + '人'"
         >
           {{ item.name }}
           <CircleCheckBig :size="16" color="green" v-if="item.select" />
@@ -223,7 +224,7 @@ const emit = defineEmits(["addLocationId"]);
 
 const handleSelectLocation = (item) => {
   item.select = !item.select;
-  emit("addLocationId", item.id, item.select);
+  emit("addLocationId", item.id, item.size, item.select);
 };
 
 const selectCount = computed(() => {
@@ -392,12 +393,30 @@ const placeSelected = ref({});
 const selectMenu = ref(0);
 
 const scaleList = ref([
-  "×", //0b000001 1
-  "1~5", //0b000010 2
-  "5~10", //0b000100 4
-  "10~30", //0b001000 8
-  "30~50", //0b010000 16
-  "50+", //0b100000 32
+  {
+    desc: "×",
+    size: 10,
+  },
+  {
+    desc: "<10",
+    size: 10,
+  },
+  {
+    desc: "10~30",
+    size: 30,
+  },
+  {
+    desc: "30~50",
+    size: 50,
+  },
+  {
+    desc: "<100",
+    size: 100,
+  },
+  {
+    desc: "100+",
+    size: 100,
+  },
 ]);
 
 const selectContent = ref([]);

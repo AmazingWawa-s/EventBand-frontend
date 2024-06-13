@@ -10,12 +10,12 @@
         <textarea v-model="eventInfo" />
       </div>
       <div class="ecform-time ecform-item">
-        时间偏好
+        <text>活动时间</text>
         <Picker ref="timePickerRef" />
       </div>
       <div class="ecform-place ecform-item">
         地点偏好
-        <Select @addLocationId="addLocation()" />
+        <Select @addLocationId="(id, cap, flag) => addLocation(id, cap, flag)" />
       </div>
     </div>
     <div class="ecform-bottom ecform-item">
@@ -73,6 +73,10 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
+      }
+      text:after {
+        content: " ※";
+        color: @theme-color;
       }
     }
 
@@ -152,21 +156,27 @@ const timePickerRef = ref(null);
 
 const eventInfo = ref("");
 const eventName = ref("");
-const eventPlace = new Set();
+const eventPlace = new Map();
 
-const addLocation = (id, flag) => {
+const addLocation = (id, cap, flag) => {
   if (flag) {
-    eventPlace.add(id);
+    eventPlace.set(id, cap);
   } else {
     eventPlace.delete(id);
   }
-  console.log(eventPlace, Array.from(eventPlace));
 };
 
 const createEvent = () => {
   let token = localStorage.getItem("token");
   let eventTime = timePickerRef.value.TimeSelected;
-  console.log(eventPlace);
+  let eventPlaceArray = [];
+  eventPlace.forEach((value, key) => {
+    eventPlaceArray.push({
+      id: key,
+      capacity: value,
+    });
+  });
+  console.log(eventPlaceArray);
   if (eventName.value && eventInfo.value) {
     ApiCreateEvent(
       token,
@@ -176,7 +186,8 @@ const createEvent = () => {
       eventTime.time2,
       eventName.value,
       eventInfo.value,
-      Array.from(eventPlace)
+      eventPlaceArray,
+      30
     ).then((res) => {
       console.log(res);
     });

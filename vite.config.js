@@ -13,10 +13,16 @@ export default defineConfig({
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.43.66:8000',
+        target: 'http://192.168.43.67:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
-      }
+      },
+      '/wsUrl': {
+        target: 'ws://192.168.43.67:8000',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/wsUrl/, '')
+      },
     }
   },
   css: {

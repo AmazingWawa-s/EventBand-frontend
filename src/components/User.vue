@@ -148,20 +148,33 @@ import { useStore } from "../store";
 const eventList = ref();
 const store = useStore();
 const loading = ref(true);
+const router = useRouter();
 
 onMounted(() => {
   let token = localStorage.getItem("token");
   console.log(token);
   ApiLoadUserPage(token).then((res) => {
     console.log(res);
-    const { eventlist, locationlist } = res.data.data;
-    eventList.value = eventlist;
-    store.locationList = locationlist;
-    loading.value = false;
+    const { code, msg } = res.data;
+    if (msg == "token out of date") {
+      console.log("退出登录");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userName");
+      store.isLogin = false;
+      store.userName = null;
+      store.token = null;
+      router.push({
+        path: "/",
+      });
+    } else {
+      const { eventlist, locationlist } = res.data.data;
+      eventList.value = eventlist;
+      store.locationList = locationlist;
+      loading.value = false;
+    }
   });
 });
 
-const router = useRouter();
 const isSlide = ref(false);
 
 const currentDate = new Date();

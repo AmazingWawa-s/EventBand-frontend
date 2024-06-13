@@ -43,10 +43,14 @@
             :key="item"
           >
             <div class="header">
-              <div>{{ item.user }}</div>
+              <div>
+                <Megaphone :size="18" v-show="item.type == 'inform'" />{{ item.user }}
+              </div>
               <div>{{ item.date + " " + item.time }}</div>
             </div>
-            <div class="body">{{ item.content }}</div>
+            <div class="body">
+              {{ item.content }}
+            </div>
           </div>
         </div>
         <div class="input-frame">
@@ -202,6 +206,7 @@
           .header {
             display: flex;
             gap: 10px;
+            align-items: center;
             font-size: 16px;
             color: #666;
           }
@@ -222,6 +227,7 @@
 
           .header {
             display: none;
+            align-items: center;
           }
 
           .body {
@@ -237,16 +243,23 @@
           border: 2px solid #666;
           display: grid;
           gap: 10px;
+          width: 360px;
           box-shadow: 3px 3px 0 #666;
           padding: 10px;
           margin: 10px 0;
           border-radius: 10px;
 
           .header {
+            align-items: center;
             color: #666;
             display: flex;
             font-size: 16px;
             justify-content: space-between;
+
+            div {
+              align-items: center;
+              display: flex;
+            }
           }
 
           .body {
@@ -292,6 +305,7 @@ import { ref } from "vue";
 import { Bell } from "lucide-vue-next";
 import { useStore } from "../store";
 import { CircleX } from "lucide-vue-next";
+import { Megaphone } from "lucide-vue-next";
 import { BellOff } from "lucide-vue-next";
 import { SendHorizontal } from "lucide-vue-next";
 const store = useStore();
@@ -347,7 +361,7 @@ const chatlist = ref([
         time: "10:24",
         user: "小明",
         content: "大家好",
-        type: "normal",
+        type: "inform",
       },
       {
         date: "24/6/1",

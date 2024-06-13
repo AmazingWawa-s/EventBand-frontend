@@ -11,11 +11,11 @@
         <MInfo />
       </div>
       <div class="module-frame">
-        <MCountdown />
+        <MCountdown :countdown="1" />
       </div>
     </div>
     <div class="module-frame participants">
-      <MParticipants />
+      <MParticipants :eventId="eventId" />
     </div>
     <div class="module-frame feedback">
       <MOthers />
