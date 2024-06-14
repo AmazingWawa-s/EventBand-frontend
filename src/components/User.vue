@@ -167,9 +167,10 @@ onMounted(() => {
         path: "/",
       });
     } else {
-      const { eventlist, locationlist } = res.data.data;
+      const { eventlist, locationlist, todolist } = res.data.data;
       eventList.value = eventlist;
       store.locationList = locationlist;
+      store.todolist = todolist;
       loading.value = false;
     }
   });

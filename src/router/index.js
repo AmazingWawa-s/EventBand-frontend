@@ -18,6 +18,11 @@ const routes = [
         component: () => import('../components/EventDetail.vue')
     },
     {
+        path: '/eventDetail_',
+        name: 'eventDetail_',
+        component: () => import('../components/EventDetail_RO.vue')
+    },
+    {
         path: '/admin',
         name: 'admin',
         component: () => import('../components/Admin.vue')

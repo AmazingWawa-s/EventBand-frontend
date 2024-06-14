@@ -1,9 +1,13 @@
 <template>
   <div class="home-main-container">
     <div class="scrollsnap section1">
-      <img class="section1-logo" src="../assets/title_ver3.svg" alt="" />
-      <div class="section1-msg" @click="flipActive = !flipActive">
-        立即开始<ArrowRight :size="36" />
+      <img class="section1-logo" src="../assets/title_ver2.svg" alt="" />
+      <div class="section1-left-down">
+        <img src="../assets/deco.svg" alt="" />
+        <div class="section1-msg" @click="flipActive = !flipActive">
+          立即开始<ArrowRight :size="36" />
+        </div>
+        <img src="../assets/deco2.svg" alt="" />
       </div>
       <div class="section1-login-frame">
         <div :class="{ 'flip-frame': true, 'flip-active': flipActive }">
@@ -166,6 +170,7 @@ const register = () => {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  background: url("../assets/texture.png") center/100% #fff;
   overflow-y: scroll;
   position: relative;
 
@@ -196,6 +201,16 @@ const register = () => {
       display: flex;
       align-items: center;
       position: relative;
+    }
+
+    .section1-left-down {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        height: 60px;
+      }
     }
 
     .section1-msg::after {
@@ -257,6 +272,7 @@ const register = () => {
             border-radius: 10px;
             display: grid;
             gap: 5px;
+            overflow: hidden;
             grid-template-rows: auto 1fr;
             background-color: rgb(255, 226, 173);
             padding: 7px;

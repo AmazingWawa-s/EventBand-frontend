@@ -35,12 +35,9 @@
       </div>
       <div class="todolist-content">
         <div class="todolist-add">
-          <div
-            @click="() => (addTodolist = !addTodolist)"
-            :class="{ button: true, 'button-form': addTodolist }"
-          >
-            新建
-            <ClipboardPlus :size="20" />
+          <div :class="{ button: true, 'button-form': addTodolist }">
+            NOTICE
+            <!-- <ClipboardPlus :size="20" /> -->
           </div>
         </div>
         <div class="todolist-sub-frame">
@@ -55,11 +52,7 @@
             </div>
           </div>
           <div class="todolist-scroll">
-            <TodoListItem
-              v-for="item in mockMessageList"
-              v-bind="item"
-              :key="item.time"
-            />
+            <TodoListItem v-for="item in store.todolist" v-bind="item" :key="item" />
           </div>
         </div>
       </div>
@@ -255,11 +248,11 @@
           align-items: center;
           justify-content: center;
           background-color: @todolist-form-color;
+          font-family: "Consolas";
           border-radius: 6px 6px 0 0;
           padding: 10px;
           color: #333;
           font-weight: 600;
-          cursor: pointer;
         }
       }
 
@@ -342,46 +335,48 @@ import { Coffee } from "lucide-vue-next";
 import { Bookmark } from "lucide-vue-next";
 import { CirclePlus } from "lucide-vue-next";
 import { Cross } from "lucide-vue-next";
+import { useStore } from "../store";
 const tabChange = ref(false);
+const store = useStore();
 const addTodolist = ref(false);
 const checkedDate = inject("checkedDate");
 
-const mockMessageList = ref([
-  {
-    time: "2024/5/17 15:49",
-    content: "活动“XXXXX”审核中",
-    type: "waiting",
-    link: "",
-  },
-  {
-    time: "2024/5/17 18:30",
-    content: "有新的报销申请",
-    type: "link",
-    link: "",
-  },
-  {
-    time: "2024/5/17 18:30",
-    content: "有新的报销申请",
-    type: "link",
-    link: "",
-  },
-  {
-    time: "2024/5/17 18:30",
-    content: "有新的报销申请",
-    type: "link",
-    link: "",
-  },
-  {
-    time: "2024/5/17 21:00",
-    content: "活动“XXXX”未通过审核",
-    type: "error",
-    link: "",
-  },
-  {
-    time: "2024/5/17 21:00",
-    content: "活动“XXXX”未通过审核",
-    type: "error",
-    link: "",
-  },
-]);
+// const mockMessageList = ref([
+//   {
+//     time: "2024/5/17 15:49",
+//     content: "活动“XXXXX”审核中",
+//     type: "waiting",
+//     link: "",
+//   },
+//   {
+//     time: "2024/5/17 18:30",
+//     content: "有新的报销申请",
+//     type: "link",
+//     link: "",
+//   },
+//   {
+//     time: "2024/5/17 18:30",
+//     content: "有新的报销申请",
+//     type: "link",
+//     link: "",
+//   },
+//   {
+//     time: "2024/5/17 18:30",
+//     content: "有新的报销申请",
+//     type: "link",
+//     link: "",
+//   },
+//   {
+//     time: "2024/5/17 21:00",
+//     content: "活动“XXXX”未通过审核",
+//     type: "error",
+//     link: "",
+//   },
+//   {
+//     time: "2024/5/17 21:00",
+//     content: "活动“XXXX”未通过审核",
+//     type: "error",
+//     link: "",
+//   },
+// ]);
 </script>

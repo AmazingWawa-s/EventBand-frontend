@@ -1,35 +1,35 @@
 <template>
-  <div
-    @click="() => (showDetail = !showDetail)"
-    :class="{ inform: true, 'todolist-item': true }"
-  >
+  <div @click="handleClick" :class="{ inform: true, 'todolist-item': true }">
     <div class="todolist-item-body">
       <div
         class="label"
         :style="{
           backgroundColor:
-            type == 'error'
+            message_type == 'error'
               ? 'orangered'
-              : type == 'waiting'
+              : message_type == 'waiting'
               ? 'lightblue'
               : 'lightgreen',
         }"
       ></div>
       <div class="todolist-item-content">
-        <p>{{ time }}</p>
-        <div>{{ content }}</div>
+        <p>{{ message_time.replace("T", " ") }}</p>
+        <div>{{ message_content }}</div>
       </div>
-      <AlarmClock v-if="type == 'waiting'" class="todolist-item-button" />
-      <CircleArrowRight v-else-if="type == 'link'" class="todolist-item-button" />
-      <MessageCircleWarning v-else-if="type == 'error'" class="todolist-item-button" />
+      <AlarmClock v-if="message_type == 'waiting'" class="todolist-item-button" />
+      <CircleArrowRight v-else-if="message_type == 'link'" class="todolist-item-button" />
+      <MessageCircleWarning
+        v-else-if="message_type == 'error'"
+        class="todolist-item-button"
+      />
     </div>
   </div>
   <div
-    v-if="details"
+    v-if="message_detail"
     class="todolist-item-detail"
-    :style="{ height: showDetail ? '100px' : 0 }"
+    :style="{ maxHeight: showDetail ? '100px' : 0 }"
   >
-    <div>详情</div>
+    <div>{{ "备注:" + message_detail }}</div>
   </div>
 </template>
 
@@ -79,9 +79,11 @@
   transition: 300ms;
 
   div {
-    margin: 0 0 0 10px;
+    margin: 10px;
+    padding: 0 10px;
+    font-size: 18px;
+    color: #666;
     // background-color: #eee;
-    box-shadow: 1px 0 2px #ddd inset;
     height: 100%;
   }
 }
@@ -96,7 +98,30 @@ import { ref } from "vue";
 import { AlarmClock } from "lucide-vue-next";
 import { CircleArrowRight } from "lucide-vue-next";
 import { MessageCircleWarning } from "lucide-vue-next";
-const props = defineProps(["time", "content", "type", "details"]);
+import { useRouter } from "vue-router";
+const props = defineProps([
+  "message_time",
+  "message_content",
+  "message_type",
+  "message_detail",
+  "message_link",
+]);
 
+const router = useRouter();
 const showDetail = ref(false);
+
+const handleClick = () => {
+  if (props.message_link) {
+    const query = props.message_link.split("?")[1];
+    const url = props.message_link.split("?")[0];
+    router.push({
+      path: url,
+      query: {
+        id: query.split("=")[1],
+      },
+    });
+  } else if (props.message_detail) {
+    showDetail.value = !showDetail.value;
+  }
+};
 </script>

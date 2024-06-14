@@ -17,10 +17,10 @@
         <Sticker />
         <span class="word">活动反馈</span>
       </div>
-      <div @click="menuSelect = 4" :class="{ item: true, selected: menuSelect == 4 }">
+      <!-- <div @click="menuSelect = 4" :class="{ item: true, selected: menuSelect == 4 }">
         <LandPlot />
         <span class="word">场地管理</span>
-      </div>
+      </div> -->
     </div>
     <div class="body">
       <keep-alive>
@@ -101,5 +101,5 @@ import Wfeedback from "../components/Wfeedback.vue";
 import Wsettings from "../components/Wsettings.vue";
 
 const menuSelect = ref(0);
-const menuList = ref([Wsettings, Wbudgets, Wsupplies, Wfeedback, Wplace]);
+const menuList = ref([Wsettings, Wbudgets, Wsupplies, Wfeedback]);
 </script>

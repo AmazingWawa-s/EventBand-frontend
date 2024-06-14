@@ -7,5 +7,6 @@ export const useStore = defineStore('id', {
         systemInform: '', //type:INVITE,
         userName: '',
         locationList: null,
+        todolist: []
     }),
 })

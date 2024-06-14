@@ -15,12 +15,14 @@
       <div
         v-for="item in eventlist"
         :key="item"
-        @click="jumpToDetail(item.event_id)"
+        @click="jumpToDetail(item.event_id, item.eurelation_role)"
         class="eventlist-item-card"
       >
         <div class="title">{{ item.event_name }}</div>
-        <div class="time"><Clock :size="16" />{{ item.event_start.split(":")[0] }}</div>
-        <div class="place"><MapPinned :size="16" />{{ item.event_location_id }}</div>
+        <div class="time">
+          <Clock :size="16" />{{ item.event_start_date + " ~ " + item.event_end_date }}
+        </div>
+        <div class="place"><MapPinned :size="16" />{{ item.event_location_name }}</div>
         <div class="end">
           <div class="tag">
             <UserRoundCog
@@ -28,9 +30,9 @@
               :size="16"
             />
             <UserRound v-else :size="16" />
-            {{ item.eurelation_role }}
+            {{ item.eurelation_role == "creator" ? "创建" : "参与" }}
           </div>
-          <div v-if="item.state == 0" class="state prep">
+          <div v-if="item.event_ready == 0" class="state prep">
             <Hourglass :size="16" />筹备中
           </div>
           <div v-else class="state ready"><CalendarCheck :size="16" />筹备完成</div>
@@ -304,13 +306,22 @@ const handleJoin = () => {
   }
 };
 
-const jumpToDetail = (id) => {
-  router.push({
-    path: "/eventDetail",
-    query: {
-      id: id,
-    },
-  });
+const jumpToDetail = (id, role) => {
+  if (role == "creator") {
+    router.push({
+      path: "/eventDetail",
+      query: {
+        id: id,
+      },
+    });
+  } else {
+    router.push({
+      path: "/eventDetail_",
+      query: {
+        id: id,
+      },
+    });
+  }
 };
 
 const jumpToSearch = () => {

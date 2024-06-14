@@ -1,5 +1,5 @@
 <template>
-  <div class="chatroom-main-container">
+  <div v-if="!loading" class="chatroom-main-container">
     <div class="chatroom-frame">
       <div class="sidebar">
         <div class="header"></div>
@@ -10,23 +10,34 @@
           :class="{ 'chatlist-item-frame': true, selected: index == chatSelect }"
         >
           <div class="chatlist-item">
-            <div class="count">99+</div>
+            <div :class="{ count: true, group: item.chr_type == 0 }">
+              <UsersRound v-if="item.chr_type == 0" :size="20" /><UserRound
+                v-else
+                :size="20"
+              />
+            </div>
             <div class="chatlist-body">
               <div class="title">{{ item.title }}</div>
-              <div class="time">{{ item.chatlist[item.chatlist.length - 1].time }}</div>
+              <div class="time">
+                {{
+                  item.chatlist[item.chatlist.length - 1].chr_time
+                    .replace("T", " ")
+                    .replace(":00", "")
+                }}
+              </div>
               <div class="latest">
                 {{
-                  item.chatlist[item.chatlist.length - 1].user +
+                  item.chatlist[item.chatlist.length - 1].chr_sender +
                   ": " +
-                  item.chatlist[item.chatlist.length - 1].content
+                  item.chatlist[item.chatlist.length - 1].chr_content
                 }}
               </div>
             </div>
           </div>
           <div class="options">
-            <BellOff color="orange" :size="20" />
-            <Bell color="orange" :size="20" />
-            <CircleX color="orangered" :size="20" />
+            <!-- <BellOff color="orange" :size="20" />
+            <Bell color="orange" :size="20" /> -->
+            <CircleX class="button" color="orangered" :size="20" />
           </div>
         </div>
       </div>
@@ -35,36 +46,46 @@
         <div class="chat-frame">
           <div
             :class="{
-              'chat-bubble': item.type == 'normal',
-              'chat-inform': item.type == 'inform',
-              'chat-bubble-self': item.user == store.userName,
+              'chat-bubble': true,
+              'chat-bubble-self': item.chr_sender == store.userName,
             }"
             v-for="item in chatlist[chatSelect].chatlist"
             :key="item"
           >
             <div class="header">
-              <div>
-                <Megaphone :size="18" v-show="item.type == 'inform'" />{{ item.user }}
-              </div>
-              <div>{{ item.date + " " + item.time }}</div>
+              <div>{{ item.chr_sender }}</div>
+              <div>{{ item.chr_time.replace("T", " ").replace(":00", "") }}</div>
             </div>
             <div class="body">
-              {{ item.content }}
+              {{ item.chr_content }}
             </div>
           </div>
         </div>
         <div class="input-frame">
-          <textarea />
+          <textarea v-model="userInput" />
           <div class="bottom">
-            <div class="button">发送<SendHorizontal /></div>
+            <div class="button" @click="sendMessage">发送<SendHorizontal /></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="loading" v-else>
+    <div>
+      <Loading />
+    </div>
+  </div>
 </template>
 
 <style lang="less" scoped>
+.loading {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .chatroom-main-container {
   max-width: 1366px;
   height: 100%;
@@ -126,10 +147,15 @@
             display: flex;
             justify-content: center;
             border-radius: 5px;
-            background-color: rgb(255, 200, 0);
-            color: #fff;
+            background-color: rgb(144, 238, 143);
+            color: rgba(31, 109, 0, 0.75);
             align-items: center;
             font-size: 14px;
+          }
+
+          .group {
+            background-color: rgb(255, 200, 0);
+            color: rgb(104, 81, 0);
           }
 
           .chatlist-body {
@@ -169,6 +195,10 @@
 
         .options {
           height: 24px;
+
+          .button {
+            cursor: pointer;
+          }
         }
       }
     }
@@ -301,170 +331,267 @@
 </style>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Bell } from "lucide-vue-next";
 import { useStore } from "../store";
 import { CircleX } from "lucide-vue-next";
+import { UserRound } from "lucide-vue-next";
 import { Megaphone } from "lucide-vue-next";
+import { UsersRound } from "lucide-vue-next";
 import { BellOff } from "lucide-vue-next";
 import { SendHorizontal } from "lucide-vue-next";
+import Loading from "../components/svg/Loading.vue";
+import { ApiChatRecord, ApiSendChat } from "../api";
 const store = useStore();
+const loading = ref(true);
 
 const chatlist = ref([
-  {
-    title: "2024读者嘉年华活动",
-    chatlist: [
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "inform",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "AmazingWawa",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:30",
-        user: "管理员",
-        content: "请成员不要在群聊内发送无关信息",
-        type: "inform",
-      },
-    ],
-  },
-  {
-    title: "活动2",
-    chatlist: [
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "小刚",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-    ],
-  },
-  {
-    title: "活动3",
-    chatlist: [
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "小刚",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-    ],
-  },
-  {
-    title: "活动4",
-    chatlist: [
-      {
-        date: "24/6/1",
-        time: "10:24",
-        user: "小明",
-        content: "大家好",
-        type: "normal",
-      },
-      {
-        date: "24/6/1",
-        time: "10:26",
-        user: "小刚",
-        content: "塞扣泥塔塔开",
-        type: "normal",
-      },
-    ],
-  },
+  // {
+  //   title: "2024读者嘉年华活动",
+  //   chatlist: [
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "inform",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "AmazingWawa",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:30",
+  //       user: "管理员",
+  //       content: "请成员不要在群聊内发送无关信息",
+  //       type: "inform",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "活动2",
+  //   chatlist: [
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "小刚",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "活动3",
+  //   chatlist: [
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "小刚",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "活动4",
+  //   chatlist: [
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:24",
+  //       user: "小明",
+  //       content: "大家好",
+  //       type: "normal",
+  //     },
+  //     {
+  //       date: "24/6/1",
+  //       time: "10:26",
+  //       user: "小刚",
+  //       content: "塞扣泥塔塔开",
+  //       type: "normal",
+  //     },
+  //   ],
+  // },
 ]);
 
 const chatSelect = ref(0);
+const userInput = ref("");
+
+onMounted(() => {
+  const token = localStorage.getItem("token");
+  ApiChatRecord(token).then((res) => {
+    console.log(res);
+    chatlist.value = res.data.data;
+    loading.value = false;
+    console.log(chatlist.value);
+  });
+});
+
+const ws = new WebSocket("wsUrl/ws/notifications" + "/");
+
+ws.addEventListener("message", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(data);
+});
+
+ws.addEventListener("open", () => {
+  console.log("连接websocket");
+  const token = localStorage.getItem("token");
+  // const msg = {
+  //   content: "login",
+  //   userToken: token,
+  //   timestamp: Date.now(),
+  // };
+  // ws.send(JSON.stringify(msg));
+});
+
+ws.addEventListener("close", () => {
+  const token = localStorage.getItem("token");
+  // const msg = {
+  //   content: "logoff",
+  //   userToken: token,
+  //   timestamp: Date.now(),
+  // };
+  // ws.send(JSON.stringify(msg));
+});
+
+ws.addEventListener("error", (res) => {
+  console.log(res);
+});
+
+const sendMessage = () => {
+  const { chr_type, title_id } = chatlist.value[chatSelect.value];
+  if (userInput.value) {
+    const token = localStorage.getItem("token");
+    const time = new Date().getTime();
+    console.log(time);
+    if (chr_type == 0) {
+      // ApiSendChat(token, userInput.value, chr_type, time, null, title_id).then((res) => {
+      //   console.log(res);
+      // });
+      const data = {
+        userToken: token,
+        content: userInput.value,
+        chatType: chr_type,
+        timestamp: time,
+        receiverId: null,
+        eventId: title_id,
+      };
+      ws.send(JSON.stringify(data));
+      chatlist.value[chatSelect.value].chatlist.push({
+        chr_content: userInput.value,
+        chatType: chr_type,
+        chr_sender: store.userName,
+        chr_time: "aaa",
+      });
+    } else {
+      const data = {
+        userToken: token,
+        chr_content: userInput.value,
+        chatType: chr_type,
+        timestamp: time,
+        receiverId: title_id,
+        eventId: null,
+      };
+      ws.send(JSON.stringify(data));
+      chatlist.value[chatSelect.value].chatlist.push({
+        content: userInput.value,
+        chatType: chr_type,
+        chr_sender: store.userName,
+        chr_time: "aaa",
+      });
+      // ApiSendChat(token, userInput.value, chr_type, time, title_id, null).then((res) => {
+      //   console.log(res);
+      // });
+    }
+    userInput.value = "";
+  }
+};
 </script>

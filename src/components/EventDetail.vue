@@ -1,7 +1,10 @@
 <template>
-  <div class="eventdetail-main-container">
+  <div v-if="!loading" class="eventdetail-main-container">
     <div class="schedule">
-      <div class="event-title">{{ eventData.title }}</div>
+      <div class="event-title">
+        <div class="divide"></div>
+        {{ eventData.name }}
+      </div>
       <div class="module-frame">
         <MSchedule />
       </div>
@@ -11,7 +14,7 @@
         <MInfo />
       </div>
       <div class="module-frame">
-        <MCountdown :countdown="1" />
+        <MCountdown :countdown="countdown" />
       </div>
     </div>
     <div class="module-frame participants">
@@ -21,9 +24,22 @@
       <MOthers />
     </div>
   </div>
+  <div class="loading" v-else>
+    <div>
+      <Loading />
+    </div>
+  </div>
 </template>
 
 <style lang="less" scoped>
+.loading {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .eventdetail-main-container {
   position: relative;
   z-index: @z-index-body;
@@ -60,7 +76,16 @@
     .event-title {
       margin-left: 5px;
       font-weight: 600;
+      display: flex;
+      gap: 5px;
       font-size: 1.2rem;
+
+      .divide {
+        width: 5px;
+        height: 100%;
+        border-radius: 10px;
+        background-color: #666;
+      }
     }
   }
 
@@ -94,88 +119,54 @@ import MParticipants from "../components/MParticipants.vue";
 import MOthers from "../components/MOthers.vue";
 import MInfo from "../components/MInfo.vue";
 import MCountdown from "../components/MCountdown.vue";
-import { onMounted, provide, reactive, ref } from "vue";
+import Loading from "../components/svg/Loading.vue";
+import { computed, onMounted, provide, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ApiEventDetail } from "../api";
 const router = useRouter();
+
+const loading = ref(true);
 const filterOn = ref(false);
-const supplies = reactive([
-  {
-    name: "麦克风",
-    amount: 9,
-    ready: true,
-  },
-  {
-    name: "音箱",
-    amount: 2,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-  {
-    name: "宣传手册",
-    amount: 100,
-    ready: false,
-  },
-]);
-const costList = reactive({
-  budget: 2000,
-  costTotal: 1500,
-  record: [
+const participantGroups = reactive({
+  content: [
     {
-      user: "小明",
-      cost: 150,
-      reason: "玩元神玩元神玩元神玩元神玩元神玩元神玩元神",
-      passed: "undo",
-      remark: "",
-    },
-    {
-      user: "小明",
-      cost: 150,
-      reason: "买零食",
-      passed: "undo",
-      remark: "",
-    },
-    {
-      user: "小刚",
-      cost: 648,
-      reason: "充原神",
-      passed: "false",
-      remark: "手游充值不在活动报销范围内",
-    },
-    {
-      user: "小李",
-      cost: 35,
-      reason: "打车路费",
-      passed: "true",
-      remark: "",
+      group_name: "全部",
+      group_id: -1,
+      group_event_id: -1,
     },
   ],
 });
-const eventData = ref({
-  title: "“书香四月 向美而行”2024年读者嘉年华活动",
-  info:
-    "无锡市图书馆特别策划“书香四月 向美而行”2024年读者嘉年华，线上线下集中开展40余场丰富多彩的阅读活动，展现图书馆的多元特色。",
-  place: "无锡市图书馆",
+const supplies = reactive({
+  content: [],
 });
+const costList = reactive({
+  budget: 0,
+  costTotal: 0,
+  record: [],
+});
+const countdown = computed(() => {
+  const date2 = new Date();
+  const date1 = eventData.event_start_date;
+  const date3 = eventData.event_end_date;
+  return parseInt((new Date(date1).getTime() - date2.getTime()) / 1000 / 60 / 60 / 24);
+});
+const eventData = reactive({
+  person_max: -1,
+  event_type: 0,
+  event_ready: 0,
+  name: "",
+  description: "",
+  event_start_date: "",
+  user_name: "",
+  location: "",
+});
+const participantList = reactive({
+  content: [],
+});
+const subEvents = reactive({
+  content: [],
+});
+
 const eventId = ref();
 
 onMounted(() => {
@@ -184,9 +175,40 @@ onMounted(() => {
   let token = localStorage.getItem("token");
   ApiEventDetail(token, eventId.value).then((res) => {
     console.log(res);
+    const {
+      costRemarks,
+      eventbrief,
+      eventdetail,
+      groups,
+      participants,
+      resources,
+      subevents,
+    } = res.data.data;
+    supplies.content = resources;
+    costList.record = costRemarks;
+    costList.budget = eventdetail.event_budget;
+    costList.costTotal = eventdetail.event_cost;
+    participantList.content = participants;
+    participantGroups.content = participantGroups.content.concat(groups);
+    eventData.person_max = eventdetail.event_person_max;
+    eventData.event_type = eventbrief.event_type;
+    eventData.event_ready = eventbrief.event_ready;
+    eventData.description = eventbrief.event_description;
+    eventData.event_start_date = eventbrief.event_start_date;
+    eventData.name = eventbrief.event_name;
+    eventData.user_name = eventbrief.event_creator_name;
+    eventData.location = eventbrief.location_firstname + " " + eventbrief.location_name;
+    subEvents.content = subevents;
+    loading.value = false;
   });
+  console.log(participantList);
 });
 
 provide("supplies", supplies);
 provide("costList", costList);
+provide("participants", participantList);
+provide("groups", participantGroups);
+provide("basicData", eventData);
+provide("eventId", eventId);
+provide("subevents", subEvents);
 </script>

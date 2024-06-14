@@ -9,21 +9,25 @@
       <div class="header">
         <div>物资</div>
         <div class="amount">数量</div>
-        <div class="amount">状态</div>
+        <div class="state">状态</div>
+        <div class="amount"></div>
       </div>
       <div class="scroll">
-        <div class="supply-item" v-for="item in supplies" :key="item">
-          <div>{{ item.name }}</div>
-          <div class="end">{{ item.amount }}</div>
+        <div class="supply-item" v-for="(item, index) in supplies.content" :key="item">
+          <div>{{ item.resource_name }}</div>
+          <div class="end">{{ item.resource_num }}</div>
           <div
             class="end"
             :style="{
               cursor: 'pointer',
             }"
-            @click="item.ready = !item.ready"
+            @click="changeState(item)"
           >
-            <div class="state-ready" v-if="item.ready">就绪</div>
+            <div class="state-ready" v-if="item.resource_condition == '就绪'">就绪</div>
             <div class="state-no" v-else>缺少</div>
+          </div>
+          <div class="delete" @click="deleteResource(item, index)">
+            <Trash2 :size="18" color="#666" />
           </div>
         </div>
       </div>
@@ -95,7 +99,7 @@
     height: 100%;
     display: grid;
     grid-template-rows: auto 1fr;
-    grid-template-columns: 3fr 1fr 1fr;
+    grid-template-columns: 3fr 1fr 1fr auto;
     border-radius: 5px;
     gap: 5px;
     font-size: 18px;
@@ -104,19 +108,24 @@
     .header {
       height: 30px;
       border-bottom: 2px solid #ddd;
-      grid-column: 1/4;
+      grid-column: 1/5;
       font-weight: 600;
-      padding-right: 15px;
       display: grid;
       grid-template-columns: subgrid;
+      padding-right: 5px;
 
       .amount {
         justify-self: self-end;
       }
+
+      .state {
+        justify-self: self-end;
+        padding-right: 5px;
+      }
     }
 
     .scroll {
-      grid-column: 1/4;
+      grid-column: 1/5;
       display: grid;
       grid-template-columns: subgrid;
       grid-auto-rows: 30px;
@@ -127,7 +136,7 @@
 
       .supply-item {
         height: 30px;
-        grid-column: 1/4;
+        grid-column: 1/5;
         display: grid;
         grid-template-columns: subgrid;
         align-items: center;
@@ -149,8 +158,13 @@
           font-size: 16px;
           color: #fff;
           border-radius: 5px;
-          background-color: rgb(255, 66, 66);
+          background-color: #ff4242;
           padding: 5px;
+        }
+
+        .delete {
+          align-self: center;
+          cursor: pointer;
         }
       }
     }
@@ -163,19 +177,61 @@ import { PackagePlus } from "lucide-vue-next";
 import { inject, ref } from "vue";
 import { Check } from "lucide-vue-next";
 import { X } from "lucide-vue-next";
+import { Trash2 } from "lucide-vue-next";
+import { ApiAddResources, ApiDeleteResources, ApiUpdateResources } from "../api";
 
 const supplies = inject("supplies");
+const eventId = inject("eventId");
 const supplyName = ref("");
 const amount = ref(1);
 const addSupply = () => {
-  if (supplyName.value) {
-    supplies.unshift({
-      name: supplyName.value,
-      amount: amount.value,
-      ready: false,
+  if (supplyName.value && amount.value > 0) {
+    // supplies.unshift({
+    //   resource_name: supplyName.value,
+    //   resource_num: amount.value,
+    //   resource_condition: "缺少",
+    // });
+    // supplyName.value = "";
+    // amount.value = 1;
+    const token = localStorage.getItem("token");
+
+    ApiAddResources(token, eventId.value, supplyName.value, amount.value).then((res) => {
+      console.log(res);
+      const { createResourceOk, resourceId } = res.data;
+      if (createResourceOk) {
+        supplies.content.unshift({
+          resource_name: supplyName.value,
+          resource_num: amount.value,
+          resource_condition: "缺少",
+          resource_id: resourceId,
+        });
+        supplyName.value = "";
+        amount.value = 1;
+      }
     });
-    supplyName.value = "";
-    amount.value = 1;
   }
+};
+
+const deleteResource = (item, index) => {
+  const token = localStorage.getItem("token");
+  ApiDeleteResources(token, eventId.value, item.resource_id).then((res) => {
+    console.log(res);
+    const { deleteResourceOk } = res.data;
+    if (deleteResourceOk) {
+      supplies.content.splice(index, 1);
+    }
+  });
+};
+
+const changeState = (item) => {
+  const token = localStorage.getItem("token");
+  const condition = item.resource_condition == "缺少" ? "就绪" : "缺少";
+  ApiUpdateResources(token, eventId.value, item.resource_id, condition).then((res) => {
+    console.log(res);
+    const { updateResourceOk } = res.data;
+    if (updateResourceOk) {
+      item.resource_condition = condition;
+    }
+  });
 };
 </script>

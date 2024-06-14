@@ -18,6 +18,18 @@ const DELETEPARTICIPANT = 'api/deleteparticipant/'
 const EXAMINE = 'api/examine/'
 const WIDTHDRAW = 'api/withdraw/'
 const TEST = 'api/test/'
+const ALLEVENTS = 'api/getallevents/'
+const GROUPADD = 'api/group/add/'
+const GROUPJOIN = 'api/group/join/'
+const UPDATEDETAIL = 'api/updatedetail/'
+const DELETEEVENT = 'api/deleteevent/'
+const DELETERESOURCES = 'api/resource/delete/'
+const UPDATERESOURCES = 'api/resource/update/'
+const ADDRESOURCE = 'api/resource/add/'
+const COSTREMARKEXAMINE = 'api/costremark/examine/'
+const CHATRECORD = 'api/chatrecord/'
+const SENDCHAT = 'api/ws/chat/'
+const SUBEVENTS = 'api/subevent/add/'
 
 export function ApiLogin(name, password) {
     console.log('request:', LOGIN);
@@ -102,7 +114,6 @@ export function ApiCreateEvent(token, eventStartDate, eventEndDate, eventStartTi
 
 export function ApiLoadUserPage(token) {
     console.log('request', LOADUSERPAGE);
-    console.log('data:token:', token)
     return axios({
         url: LOADUSERPAGE,
         method: 'post',
@@ -170,18 +181,6 @@ export function ApiGetexamineevents(token) {
     })
 }
 
-export function ApiExamine(token, id) {
-    console.log('request', EXAMINE);
-    return axios({
-        url: EXAMINE,
-        method: 'post',
-        data: {
-            userToken: token,
-            eventId: id
-        }
-    })
-}
-
 export function ApiDeleteParticipant(token, userId, eventId) {
     console.log('request', DELETEPARTICIPANT);
     return axios({
@@ -214,6 +213,208 @@ export function ApiTest(token) {
         method: 'post',
         data: {
             userToken: token
+        }
+    })
+}
+
+export function ApiAllEvents(token) {
+    console.log('request', ALLEVENTS);
+    return axios({
+        url: ALLEVENTS,
+        method: 'post',
+        data: {
+            userToken: token
+        }
+    })
+}
+
+export function ApiGroupAdd(token, name, eventId) {
+    console.log('request', GROUPADD)
+    return axios({
+        url: GROUPADD,
+        method: 'post',
+        data: {
+            userToken: token,
+            groupName: name,
+            groupEventId: eventId
+        }
+    })
+}
+
+export function ApiGroupJoin(token, eventId, groupId, userId) {
+    console.log('request', GROUPJOIN);
+    return axios({
+        url: GROUPJOIN,
+        method: 'post',
+        data: {
+            userToken: token,
+            groupEventId: eventId,
+            groupId: groupId,
+            groupUserId: userId
+        }
+    })
+}
+
+export function ApiUpdateBudget(token, eventId, budget) {
+    console.log('request', UPDATEDETAIL);
+    let data = {
+        userToken: token,
+        eventId: eventId,
+        eventDetail: {
+            event_budget: budget
+        },
+        eventBrief: {
+        }
+    }
+    return axios({
+        url: UPDATEDETAIL,
+        method: 'post',
+        data: data
+    })
+}
+
+export function ApiUpdateSettings(token, eventId, maxperson, eventType, eventReady) {
+    console.log('request', UPDATEDETAIL);
+    return axios({
+        url: UPDATEDETAIL,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId,
+            eventDetail: {
+                event_person_max: maxperson
+            },
+            eventBrief: {
+                eventType: eventType,
+                eventReady: eventReady
+            }
+        }
+    })
+}
+
+export function ApiExamine(token, eventId, passed, reason) {
+    console.log('request', EXAMINE);
+    return axios({
+        url: EXAMINE,
+        method: 'post',
+        data: {
+            userToken: token,
+            examineEventId: eventId,
+            passed: passed,
+            reason: reason
+        }
+    })
+}
+
+export function ApiDeleteEvent(token, eventId) {
+    console.log('request', DELETEEVENT);
+    return axios({
+        url: DELETEEVENT,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId
+        }
+    })
+}
+
+export function ApiDeleteResources(token, eventId, resourceId) {
+    console.log('request', DELETERESOURCES);
+    return axios({
+        url: DELETERESOURCES,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId,
+            resourceId: resourceId
+        }
+    })
+}
+
+export function ApiUpdateResources(token, eventId, resourceId, condition) {
+    console.log('request', UPDATERESOURCES);
+    return axios({
+        url: UPDATERESOURCES,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId,
+            resourceId: resourceId,
+            toUpdate: {
+                resource_condition: condition
+            }
+        }
+    })
+}
+
+export function ApiAddResources(token, eventId, resourceName, resourceNum) {
+    console.log('request', ADDRESOURCE);
+    return axios({
+        url: ADDRESOURCE,
+        method: 'post',
+        data: {
+            userToken: token,
+            resourceEventId: eventId,
+            resourceName: resourceName,
+            resourceCondition: "缺少",
+            resourceNum: resourceNum
+        }
+    })
+}
+
+export function ApiCostremarkExamine(token, costRemarkId, passed, remark) {
+    console.log('request', COSTREMARKEXAMINE);
+    return axios({
+        url: COSTREMARKEXAMINE,
+        method: 'post',
+        data: {
+            userToken: token,
+            costRemarkId: costRemarkId,
+            passed: passed,
+            remark: remark
+        }
+    })
+}
+
+export function ApiChatRecord(token) {
+    console.log('request', CHATRECORD);
+    return axios({
+        url: CHATRECORD,
+        method: 'post',
+        data: {
+            userToken: token,
+        }
+    })
+}
+
+export function ApiSendChat(token, content, type, time, receiverId, eventId) {
+    console.log('request', SENDCHAT);
+    return axios({
+        url: SENDCHAT,
+        method: 'post',
+        data: {
+            userToken: token,
+            content: content,
+            chatType: type,
+            time: time,
+            receiverId: receiverId,
+            eventId: eventId
+        }
+    })
+}
+
+export function ApiAddSubEvent(token, eventId, time, title, content, participants) {
+    console.log('request', SUBEVENTS);
+    return axios({
+        url: SUBEVENTS,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId,
+            time: time,
+            title: title,
+            content: content,
+            participants: participants
         }
     })
 }

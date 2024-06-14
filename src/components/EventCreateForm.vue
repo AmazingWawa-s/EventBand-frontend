@@ -149,12 +149,14 @@ import Input from "../components/Input.vue";
 import Button from "../components/Button.vue";
 import Picker from "../components/Picker.vue";
 import Select from "../components/Select.vue";
-import { inject, reactive, ref } from "vue";
+import { getCurrentInstance, inject, reactive, ref } from "vue";
 import { ApiCreateEvent } from "../api";
+import { useStore } from "../store";
 
 const timePickerRef = ref(null);
 
 const eventInfo = ref("");
+const store = useStore();
 const eventName = ref("");
 const eventPlace = new Map();
 
@@ -190,6 +192,18 @@ const createEvent = () => {
       30
     ).then((res) => {
       console.log(res);
+      const { create_Event_Ok, create_Event_Id } = res.data;
+      if (create_Event_Ok) {
+        store.systemInform = {
+          type: "SUCCESS",
+          content: "申请成功，请等待审核",
+        };
+      } else {
+        store.systemInform = {
+          type: "FAILURE",
+          content: "申请失败，请修改时间",
+        };
+      }
     });
   }
 };

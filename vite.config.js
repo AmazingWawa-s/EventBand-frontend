@@ -9,16 +9,18 @@ export default defineConfig({
   },
   server: {
     open: true,
+    host: '0.0.0.0',
+    port: '5137',
     cors: true,
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.43.67:8000',
+        target: 'http://10.24.10.167:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/wsUrl': {
-        target: 'ws://192.168.43.67:8000',
+        target: 'ws://10.24.10.167:8000',
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/wsUrl/, '')

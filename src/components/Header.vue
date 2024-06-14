@@ -16,17 +16,17 @@
       <div class="user-bar" @click="jumpToUser">
         <CircleUserRound />{{ store.userName }}
       </div>
-      <div @click="test" class="menu-item">
+      <!-- <div @click="test" class="menu-item">
         <Bolt />
-      </div>
-      <div class="menu-item">
+      </div> -->
+      <div class="menu-item" @click="jumpToChatroom">
         <MessageSquareMore />
       </div>
       <div class="menu-item" @click="logoff">
         <LogOut />
       </div>
     </div>
-    <div></div>
+    <div v-else></div>
     <!-- <div class="header-back" v-else>
       <div class="menu-item">登录<LogIn /></div>
     </div> -->
@@ -159,44 +159,28 @@ onMounted(() => {
 
     ws.addEventListener("message", (e) => {
       const data = JSON.parse(e.data);
-      console.log(e);
-      // if (type === 0) {
-      //   chatList.userLogin(sender);
-      // } else if (type === 1) {
-      //   chatList.userLogout(sender);
-      // } else if (type === 2) {
-      //   if (sender === store.getUniqueName()) {
-      //     return;
-      //   }
-      //   if (receiver === "大厅") {
-      //     chatList.addChats("大厅", data);
-      //   } else {
-      //     chatList.addChats(sender, data);
-      //   }
-      // } else if (type === 3) {
-      //   chatList.initUserList(content);
-      // }
+      console.log(data);
     });
 
     ws.addEventListener("open", () => {
       console.log("连接websocket");
       const token = localStorage.getItem("token");
-      const msg = {
-        content: "login",
-        userToken: token,
-        timeStamp: Date.now(),
-      };
-      ws.send(JSON.stringify(msg));
+      // const msg = {
+      //   content: "login",
+      //   userToken: token,
+      //   timeStamp: Date.now(),
+      // };
+      // ws.send(JSON.stringify(msg));
     });
 
     ws.addEventListener("close", () => {
       const token = localStorage.getItem("token");
-      const msg = {
-        content: "logoff",
-        userToken: token,
-        timeStamp: Date.now(),
-      };
-      ws.send(JSON.stringify(msg));
+      // const msg = {
+      //   content: "logoff",
+      //   userToken: token,
+      //   timeStamp: Date.now(),
+      // };
+      // ws.send(JSON.stringify(msg));
     });
 
     ws.addEventListener("error", (res) => {
@@ -232,6 +216,12 @@ const jumpToSearch = () => {
     },
   });
   keyWord.value = "";
+};
+
+const jumpToChatroom = () => {
+  router.push({
+    path: "/chatroom",
+  });
 };
 
 const jumpToUser = () => {

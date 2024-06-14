@@ -19,33 +19,39 @@
               <img src="../assets/sift.svg" alt="" />
               |
             </div>
-            <div class="condition">{{ condition }}</div>
+            <div class="condition">{{ condition.group_name }}</div>
           </div>
         </div>
       </div>
       <div :class="{ 'participants-sift': true, 'sift-close': !siftButton }">
         <div
           :class="{ 'sift-item': true, 'sift-enhanced': itemSelected }"
-          v-for="item in dropMenu"
-          @click="handleSift(item, null)"
+          v-for="(item, index) in dropMenu.content"
+          @click="handleSift(item, index)"
           :key="item"
-          v-show="!(editActive && item == '全部')"
+          v-show="!(editActive && item.group_name == '全部')"
         >
-          {{ item }}
+          {{ item.group_name }}
         </div>
       </div>
     </div>
     <div class="participants-body">
-      <div class="participants-contents">
+      <div v-if="participants.content.length > 0" class="participants-contents">
         <div
-          v-show="condition == '全部' || condition == item.group"
-          v-for="(item, index) in participants"
+          v-show="
+            condition.group_name == '全部' ||
+            condition.group_id == item.eurelation_group_id
+          "
+          v-for="(item, index) in participants.content"
           class="participants-item"
           :key="item"
         >
           <div>{{ index + 1 }}</div>
-          <div>{{ item.name }}</div>
-          <div @click="itemSelected = item" :class="{ 'group-edit': editActive }">
+          <div>{{ item.user_name }}</div>
+          <div
+            @click="itemSelected = item"
+            :class="{ group: true, 'group-edit': editActive }"
+          >
             <RefreshCw
               v-if="editActive"
               :class="{
@@ -55,16 +61,27 @@
               :size="18"
             />
             <Users v-else :size="18" />
-            {{ item.group }}
+            {{
+              item.eurelation_group_id
+                ? dropMenu.content.find(
+                    (group) => group.group_id == item.eurelation_group_id
+                  ).group_name
+                : "未分组"
+            }}
           </div>
           <div :class="{ button: true, hidden: editActive }">
             <Mail :size="18" />
           </div>
           <div :class="{ button: true, hidden: !editActive }">
-            <CircleX color="#c1272d" :size="18" />
+            <CircleX
+              @click="deleteParticipants(item.eurelation_user_id, index)"
+              color="#c1272d"
+              :size="18"
+            />
           </div>
         </div>
       </div>
+      <div v-else class="participants-none"><PersonStanding />还未加入任何成员</div>
     </div>
     <div class="participants-bottom">
       <div class="bottom-item invite" @click="openInvite">
@@ -74,9 +91,9 @@
         <DoorOpen :size="20" />进入聊天室
       </div>
       <div class="setting">
-        <input type="text" placeholder="新建分组" />
+        <input type="text" v-model="newGroup" placeholder="新建分组" />
         <div class="divide"></div>
-        <div class="btn"><Plus /></div>
+        <div class="btn" @click="addNewGroup"><Plus /></div>
       </div>
     </div>
   </div>
@@ -176,6 +193,17 @@
     font-size: 18px;
     overflow: hidden;
 
+    .participants-none {
+      width: 100%;
+      height: 100%;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: #aaa;
+      justify-content: center;
+    }
+
     .participants-contents {
       width: 100%;
       display: grid;
@@ -196,6 +224,10 @@
         grid-column: 1/6;
         grid-template-columns: subgrid;
         align-items: center;
+
+        .group {
+          font-size: 16px;
+        }
 
         div {
           display: flex;
@@ -334,14 +366,17 @@ import { Mail } from "lucide-vue-next";
 import { CircleX } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { DoorOpen } from "lucide-vue-next";
+import { PersonStanding } from "lucide-vue-next";
 import { RefreshCw } from "lucide-vue-next";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import { useStore } from "../store";
 import { Plus } from "lucide-vue-next";
+import { ApiDeleteParticipant, ApiGroupAdd, ApiGroupJoin } from "../api";
 
 const props = defineProps(["eventId"]);
 
 const router = useRouter();
+const newGroup = ref("");
 const store = useStore();
 
 const jumpToChatRoom = () => {
@@ -359,7 +394,39 @@ const openInvite = () => {
   };
 };
 
-const condition = ref("全部");
+const addNewGroup = () => {
+  const token = localStorage.getItem("token");
+  if (newGroup.value) {
+    ApiGroupAdd(token, newGroup.value, props.eventId).then((res) => {
+      console.log(res);
+      const { createGroupOk, groupId } = res.data;
+      dropMenu.content.push({
+        group_name: newGroup.value,
+        group_id: groupId,
+      });
+      if (createGroupOk) {
+        newGroup.value = "";
+      }
+    });
+  }
+};
+
+const deleteParticipants = (userId, index) => {
+  const token = localStorage.getItem("token");
+  ApiDeleteParticipant(token, userId, props.eventId).then((res) => {
+    console.log(res);
+    const { deleteOk } = res.data;
+    if (deleteOk) {
+      participants.content.splice(index, 1);
+    }
+  });
+};
+
+const condition = ref({
+  group_name: "全部",
+  group_id: -1,
+  group_event_id: -1,
+});
 
 const editActive = ref(false);
 
@@ -367,63 +434,49 @@ const siftButton = ref(false);
 
 const itemSelected = ref(null);
 
-const handleSift = (group) => {
+const handleSift = (group, index) => {
   if (!editActive.value) {
     condition.value = group;
     siftButton.value = false;
   } else if (itemSelected.value) {
-    itemSelected.value.group = group;
+    itemSelected.value.eurelation_group_id = group.group_id;
+    const token = localStorage.getItem("token");
+    ApiGroupJoin(
+      token,
+      props.eventId,
+      group.group_id,
+      itemSelected.value.eurelation_user_id
+    ).then((res) => {
+      console.log(res);
+    });
     itemSelected.value = null;
   }
 };
 
-const dropMenu = ref(["全部", "参与者", "管理员", "志愿者", "活动负责人"]);
+const dropMenu = inject("groups");
 
-const participants = ref([
-  {
-    name: "小明",
-    group: "参与者",
-    id: "123456",
-  },
-  {
-    name: "小红",
-    group: "参与者",
-    id: "123456",
-  },
-  {
-    name: "小刚",
-    group: "志愿者",
-    id: "123456",
-  },
-  {
-    name: "小兵",
-    group: "志愿者",
-    id: "123456",
-  },
-  {
-    name: "小李",
-    group: "管理员",
-    id: "123456",
-  },
-  {
-    name: "小兵",
-    group: "志愿者",
-    id: "123456",
-  },
-  {
-    name: "小兵",
-    group: "志愿者",
-    id: "123456",
-  },
-  {
-    name: "小勇",
-    group: "活动负责人",
-    id: "123456",
-  },
-  {
-    name: "小兵",
-    group: "志愿者",
-    id: "123456",
-  },
-]);
+const participants = inject("participants");
+
+// const participants = ref([
+//   {
+//     name: "小明",
+//     group: "参与者",
+//     id: "123456",
+//   },
+//   {
+//     name: "小红",
+//     group: "参与者",
+//     id: "123456",
+//   },
+//   {
+//     name: "小刚",
+//     group: "志愿者",
+//     id: "123456",
+//   },
+//   {
+//     name: "小兵",
+//     group: "志愿者",
+//     id: "123456",
+//   },
+// ]);
 </script>
