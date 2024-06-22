@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref } from "vue";
-
   
   const feedbackList=ref([
     {

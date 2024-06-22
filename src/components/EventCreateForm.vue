@@ -152,12 +152,14 @@ import Select from "../components/Select.vue";
 import { getCurrentInstance, inject, reactive, ref } from "vue";
 import { ApiCreateEvent } from "../api";
 import { useStore } from "../store";
+import { useRouter } from "vue-router";
 
 const timePickerRef = ref(null);
 
 const eventInfo = ref("");
 const store = useStore();
 const eventName = ref("");
+const router = useRouter();
 const eventPlace = new Map();
 
 const addLocation = (id, cap, flag) => {

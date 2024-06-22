@@ -148,7 +148,9 @@ const countdown = computed(() => {
   const date2 = new Date();
   const date1 = eventData.event_start_date;
   const date3 = eventData.event_end_date;
-  return parseInt((new Date(date1).getTime() - date2.getTime()) / 1000 / 60 / 60 / 24);
+  return (
+    parseInt((new Date(date1).getTime() - date2.getTime()) / 1000 / 60 / 60 / 24) + 1
+  );
 });
 const eventData = reactive({
   person_max: -1,

@@ -3,7 +3,7 @@
     <div class="participants-header-frame">
       <div class="participants-header">
         <div class="front">成员列表</div>
-        <div class="end">
+        <div class="end" v-if="!not_creator">
           <div
             :class="{ button: true, 'button-reverse': editActive }"
             @click="
@@ -69,7 +69,7 @@
                 : "未分组"
             }}
           </div>
-          <div :class="{ button: true, hidden: editActive }">
+          <div :class="{ button: true, hidden: true }">
             <Mail :size="18" />
           </div>
           <div :class="{ button: true, hidden: !editActive }">
@@ -84,13 +84,13 @@
       <div v-else class="participants-none"><PersonStanding />还未加入任何成员</div>
     </div>
     <div class="participants-bottom">
-      <div class="bottom-item invite" @click="openInvite">
+      <div class="bottom-item invite" v-if="!not_creator" @click="openInvite">
         <UserRoundPlus :size="20" />邀请
       </div>
       <div class="bottom-item new" @click="jumpToChatRoom">
         <DoorOpen :size="20" />进入聊天室
       </div>
-      <div class="setting">
+      <div class="setting" v-if="!not_creator">
         <input type="text" v-model="newGroup" placeholder="新建分组" />
         <div class="divide"></div>
         <div class="btn" @click="addNewGroup"><Plus /></div>
@@ -456,6 +456,8 @@ const handleSift = (group, index) => {
 const dropMenu = inject("groups");
 
 const participants = inject("participants");
+
+const not_creator = inject("flag");
 
 // const participants = ref([
 //   {

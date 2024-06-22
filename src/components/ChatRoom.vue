@@ -19,11 +19,7 @@
             <div class="chatlist-body">
               <div class="title">{{ item.title }}</div>
               <div class="time">
-                {{
-                  item.chatlist[item.chatlist.length - 1].chr_time
-                    .replace("T", " ")
-                    .replace(":00", "")
-                }}
+                {{ item.chatlist[item.chatlist.length - 1].chr_time.replace("T", " ") }}
               </div>
               <div class="latest">
                 {{
@@ -43,7 +39,7 @@
       </div>
       <div class="body">
         <div class="title-frame">{{ chatlist[chatSelect].title }}</div>
-        <div class="chat-frame">
+        <div class="chat-frame" ref="autoScroll">
           <div
             :class="{
               'chat-bubble': true,
@@ -53,8 +49,8 @@
             :key="item"
           >
             <div class="header">
-              <div>{{ item.chr_sender }}</div>
-              <div>{{ item.chr_time.replace("T", " ").replace(":00", "") }}</div>
+              <div class="sender">{{ item.chr_sender }}</div>
+              <div>{{ item.chr_time.replace("T", " ") }}</div>
             </div>
             <div class="body">
               {{ item.chr_content }}
@@ -239,6 +235,10 @@
             align-items: center;
             font-size: 16px;
             color: #666;
+
+            .sender {
+              font-weight: 600;
+            }
           }
 
           .body {
@@ -331,7 +331,7 @@
 </style>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { Bell } from "lucide-vue-next";
 import { useStore } from "../store";
 import { CircleX } from "lucide-vue-next";
@@ -344,6 +344,7 @@ import Loading from "../components/svg/Loading.vue";
 import { ApiChatRecord, ApiSendChat } from "../api";
 const store = useStore();
 const loading = ref(true);
+const autoScroll = ref(null);
 
 const chatlist = ref([
   // {
@@ -511,6 +512,11 @@ onMounted(() => {
     chatlist.value = res.data.data;
     loading.value = false;
     console.log(chatlist.value);
+
+    nextTick(() => {
+      let scrollElem = autoScroll.value;
+      scrollElem.scrollTo({ top: scrollElem.scrollHeight, behavior: "smooth" });
+    });
   });
 });
 
@@ -519,17 +525,28 @@ const ws = new WebSocket("wsUrl/ws/notifications" + "/");
 ws.addEventListener("message", (e) => {
   const data = JSON.parse(e.data);
   console.log(data);
+  const { content, sender_name, timestamp, eventId } = data.data;
+  chatlist.value
+    .find((item) => item.title_id == eventId)
+    .chatlist.push({
+      chr_content: content,
+      chr_sender: sender_name,
+      chr_time: "aaa",
+    });
 });
 
 ws.addEventListener("open", () => {
   console.log("连接websocket");
   const token = localStorage.getItem("token");
-  // const msg = {
-  //   content: "login",
-  //   userToken: token,
-  //   timestamp: Date.now(),
-  // };
-  // ws.send(JSON.stringify(msg));
+  const msg = {
+    userToken: token,
+    content: "",
+    chatType: 0,
+    timestamp: new Date().getTime(),
+    receiverId: -1,
+    eventId: -1,
+  };
+  ws.send(JSON.stringify(msg));
 });
 
 ws.addEventListener("close", () => {
@@ -565,12 +582,6 @@ const sendMessage = () => {
         eventId: title_id,
       };
       ws.send(JSON.stringify(data));
-      chatlist.value[chatSelect.value].chatlist.push({
-        chr_content: userInput.value,
-        chatType: chr_type,
-        chr_sender: store.userName,
-        chr_time: "aaa",
-      });
     } else {
       const data = {
         userToken: token,
@@ -581,12 +592,6 @@ const sendMessage = () => {
         eventId: null,
       };
       ws.send(JSON.stringify(data));
-      chatlist.value[chatSelect.value].chatlist.push({
-        content: userInput.value,
-        chatType: chr_type,
-        chr_sender: store.userName,
-        chr_time: "aaa",
-      });
       // ApiSendChat(token, userInput.value, chr_type, time, title_id, null).then((res) => {
       //   console.log(res);
       // });

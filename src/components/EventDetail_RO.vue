@@ -21,7 +21,8 @@
       <MParticipants :eventId="eventId" />
     </div>
     <div class="module-frame feedback">
-      <MOthers />
+      <MBudgets />
+      <MFeedback />
     </div>
   </div>
   <div class="loading" v-else>
@@ -109,6 +110,9 @@
 
   .feedback {
     grid-area: e;
+    display: grid;
+    gap: 10px;
+    grid-template-rows: 1fr 1fr;
   }
 }
 </style>
@@ -120,6 +124,8 @@ import MOthers from "../components/MOthers.vue";
 import MInfo from "../components/MInfo.vue";
 import MCountdown from "../components/MCountdown.vue";
 import Loading from "../components/svg/Loading.vue";
+import MBudgets from "../components/MBudgets.vue";
+import MFeedback from "../components/MFeedback.vue";
 import { computed, onMounted, provide, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ApiEventDetail } from "../api";
@@ -148,7 +154,9 @@ const countdown = computed(() => {
   const date2 = new Date();
   const date1 = eventData.event_start_date;
   const date3 = eventData.event_end_date;
-  return parseInt((new Date(date1).getTime() - date2.getTime()) / 1000 / 60 / 60 / 24);
+  return (
+    parseInt((new Date(date1).getTime() - date2.getTime()) / 1000 / 60 / 60 / 24) + 1
+  );
 });
 const eventData = reactive({
   person_max: -1,
@@ -211,4 +219,7 @@ provide("groups", participantGroups);
 provide("basicData", eventData);
 provide("eventId", eventId);
 provide("subevents", subEvents);
+
+const NOT_CREATOR = true;
+provide("flag", NOT_CREATOR);
 </script>

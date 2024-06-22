@@ -454,8 +454,9 @@ const register = () => {
         max-height: 600px;
         border-radius: 10px;
         padding: 10px;
+        background-color: rgba(242, 242, 242, 0.552);
         display: flex;
-        font-size: 16px;
+        font-size: 24px;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;

@@ -30,6 +30,8 @@ const COSTREMARKEXAMINE = 'api/costremark/examine/'
 const CHATRECORD = 'api/chatrecord/'
 const SENDCHAT = 'api/ws/chat/'
 const SUBEVENTS = 'api/subevent/add/'
+const COSTREMARKADD = 'api/costremark/add/'
+const COMMENTADD = 'api/comment/add/'
 
 export function ApiLogin(name, password) {
     console.log('request:', LOGIN);
@@ -285,8 +287,8 @@ export function ApiUpdateSettings(token, eventId, maxperson, eventType, eventRea
                 event_person_max: maxperson
             },
             eventBrief: {
-                eventType: eventType,
-                eventReady: eventReady
+                event_type: eventType,
+                event_ready: eventReady
             }
         }
     })
@@ -372,6 +374,34 @@ export function ApiCostremarkExamine(token, costRemarkId, passed, remark) {
             costRemarkId: costRemarkId,
             passed: passed,
             remark: remark
+        }
+    })
+}
+
+export function ApiCommentAdd(token, content, eventId, time) {
+    console.log('request', COMMENTADD);
+    return axios({
+        url: COMMENTADD,
+        method: 'post',
+        data: {
+            userToken: token,
+            content: content,
+            eventId: eventId,
+            time: time
+        }
+    })
+}
+
+export function ApiCostremarkAdd(token, eventId, cost, reason) {
+    console.log('request', COSTREMARKADD);
+    return axios({
+        url: COSTREMARKADD,
+        method: 'post',
+        data: {
+            userToken: token,
+            eventId: eventId,
+            cost: cost,
+            reason: reason
         }
     })
 }

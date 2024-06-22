@@ -1,16 +1,29 @@
 <template>
   <div class="m-budgets-main-container">
-    <div class="budgets-header">经费报销</div>
+    <div class="budgets-header">活动反馈</div>
     <div class="budgets-body">
       <div class="item">
-        费用
-        <input v-model="inputCost" type="number" value="0" />
+        评价
+        <div class="emoji">
+          <Angry
+            @click="selectedEmoji = 0"
+            :class="{ eitem: true, 'selected-a': selectedEmoji == 0 }"
+          />
+          <Annoyed
+            @click="selectedEmoji = 1"
+            :class="{ eitem: true, 'selected-b': selectedEmoji == 1 }"
+          />
+          <Smile
+            @click="selectedEmoji = 2"
+            :class="{ eitem: true, 'selected-c': selectedEmoji == 2 }"
+          />
+        </div>
       </div>
       <div class="item">
-        理由
+        反馈
         <textarea v-model="inputReason" type="text" />
       </div>
-      <div class="button" @click="requestCost">申请</div>
+      <div class="button" @click="requestCost">提交</div>
     </div>
   </div>
 </template>
@@ -21,7 +34,7 @@
   z-index: @z-index-modules;
   overflow: hidden;
   width: 100%;
-  background-color: #fff;
+  background-color: rgb(255, 244, 217);
   height: 100%;
   padding: 10px;
   display: grid;
@@ -66,15 +79,8 @@
     overflow: hidden;
     gap: 5px;
 
-    input {
-      border: 1.5px solid #666;
-      border-radius: 5px;
-      width: 100px;
-      font-family: "Consolas";
-    }
-
     textarea {
-      border: 1.5px solid #666;
+      border: 2px dashed rgb(245, 212, 48);
       border-radius: 5px;
       width: 100%;
       resize: none;
@@ -86,13 +92,42 @@
       align-items: center;
       gap: 5px;
       white-space: nowrap;
+
+      .emoji {
+        display: flex;
+        background-color: #fff9bc;
+        box-shadow: 0 2px 5px #fdf279;
+        padding: 5px;
+        border-radius: 50px;
+        width: 200px;
+        justify-content: space-around;
+        gap: 5px;
+
+        .eitem {
+          color: #aaa;
+          cursor: pointer;
+        }
+
+        .selected-a {
+          color: rgb(211, 54, 22);
+        }
+
+        .selected-b {
+          color: rgb(246, 156, 0);
+        }
+
+        .selected-c {
+          color: rgb(21, 156, 68);
+        }
+      }
     }
 
     .button {
       justify-self: end;
-      background-color: #eee;
+      background-color: rgb(255, 151, 54);
       padding: 10px 20px;
       border-radius: 5px;
+      color: #fff;
       cursor: pointer;
     }
   }
@@ -105,27 +140,21 @@
 <script setup>
 import { Search } from "lucide-vue-next";
 import { inject, ref } from "vue";
-import { ApiCostremarkAdd } from "../api";
-import { useStore } from "../store";
-
+import { ApiCommentAdd, ApiCostremarkAdd } from "../api";
+import { Angry } from "lucide-vue-next";
+import { Smile } from "lucide-vue-next";
+import { Annoyed } from "lucide-vue-next";
 const inputReason = ref("");
-const inputCost = ref(0);
+const selectedEmoji = ref(2);
 const eventId = inject("eventId");
-const store = useStore();
 
 const requestCost = () => {
-  if (inputReason.value && inputCost.value) {
+  if (inputReason.value) {
     const token = localStorage.getItem("token");
-    ApiCostremarkAdd(token, eventId.value, inputCost.value, inputReason.value).then(
+    ApiCommentAdd(token, inputReason.value, eventId.value, new Date().getTime()).then(
       (res) => {
         console.log(res);
-        const { addCostRemarkOk } = res.data;
-        if (addCostRemarkOk) {
-          store.systemInform = {
-            type: "SUCCESS",
-            content: "申请报销成功，请等待批准",
-          };
-        }
+        inputReason.value = "";
       }
     );
   }

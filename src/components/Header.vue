@@ -4,13 +4,13 @@
       <img class="icon" src="../assets/icon_logo_ver2.svg" alt="" />
     </div>
     <div class="header-middle">
-      <div class="search-bar">
+      <!-- <div class="search-bar">
         <Search />
         <div class="divide"></div>
         <input type="text" v-model="keyWord" placeholder="搜索活动" />
         <div class="divide"></div>
         <ArrowRight class="button" @click="jumpToSearch" />
-      </div>
+      </div> -->
     </div>
     <div v-if="store.isLogin" class="header-back">
       <div class="user-bar" @click="jumpToUser">

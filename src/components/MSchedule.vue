@@ -2,7 +2,11 @@
   <div class="m-schedule-main-container">
     <div class="schedule-header">
       <div class="front">活动安排</div>
-      <div class="end" @click="() => (addScheduleButton = !addScheduleButton)">
+      <div
+        v-if="!not_creator"
+        class="end"
+        @click="() => (addScheduleButton = !addScheduleButton)"
+      >
         <div class="button-frame"><CalendarPlus :size="16" />添加新日程</div>
       </div>
     </div>
@@ -67,6 +71,7 @@
           </div>
         </div>
       </div>
+      <div v-else class="schedule-none"><CalendarFold />暂无活动安排</div>
     </div>
   </div>
 </template>
@@ -118,6 +123,19 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+
+    .schedule-none {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: 600;
+      gap: 5px;
+      background-color: #eee;
+      color: #999;
+      justify-content: center;
+    }
 
     .schedule-add-frame {
       height: 100%;
@@ -303,6 +321,7 @@
 import { inject, ref } from "vue";
 import { CalendarPlus } from "lucide-vue-next";
 import { MapPin } from "lucide-vue-next";
+import { CalendarFold } from "lucide-vue-next";
 import { ApiAddSubEvent } from "../api";
 
 const dateTabSelected = ref(0);
@@ -311,7 +330,7 @@ const addScheduleButton = ref(false);
 
 const scheduleData = inject("subevents");
 const eventId = inject("eventId");
-
+const not_creator = inject("flag");
 const inputContent = ref("");
 const inputParticipants = ref("");
 const inputTime = ref("");

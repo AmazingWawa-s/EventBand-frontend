@@ -8,7 +8,7 @@
         <div class="divide"></div>
         <ArrowRight @click="handleJoin" class="btn" />
       </div>
-      <div v-if="codeMsg" class="codemsg">{{ codeMsg }} <Frown :size="18" /></div>
+      <div v-if="codeMsg" class="codemsg">{{ codeMsg }}</div>
     </div>
     <div v-if="!eventlist"></div>
     <div v-else-if="eventlist.length > 0" class="eventlist-frame">
@@ -41,7 +41,7 @@
     </div>
     <div v-else class="eventlist-empty">
       <div class="msg">未加入任何活动<PackageOpen :size="36" /></div>
-      <div class="btn" @click="jumpToSearch">立即寻找<CircleChevronRight /></div>
+      <!-- <div class="btn" @click="jumpToSearch">立即寻找<CircleChevronRight /></div> -->
     </div>
   </div>
 </template>
@@ -295,10 +295,12 @@ const handleJoin = () => {
   if (inviteCode.value) {
     ApiJoinEvent(token, inviteCode.value).then((res) => {
       console.log(res);
-      const { eventId } = res.data;
+      const { eventId, joinOk } = res.data;
       if (eventId) {
-        jumpToDetail(eventId);
+        jumpToDetail(eventId, "participant");
         codeMsg.value = "";
+      } else if (joinOk) {
+        codeMsg.value = "加入成功，再次点击跳转";
       } else {
         codeMsg.value = "邀请码输入错误";
       }

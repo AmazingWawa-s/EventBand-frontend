@@ -25,7 +25,7 @@
           <div class="content">
             {{ store.systemInform.content }}
           </div>
-          <div class="button" @click="closeInform">确定</div>
+          <div class="button" @click="handleSuccess">确定</div>
         </div>
         <div class="body-frame failure" v-else-if="store.systemInform.type == 'FAILURE'">
           <Frown class="emoji" :size="200" />
@@ -329,6 +329,10 @@ const closeInform = () => {
 };
 
 const requestInviteCode = () => {};
+const handleSuccess = () => {
+  closeInform();
+  router.go(0);
+};
 
 const copyCode = () => {
   let token = localStorage.getItem("token");

@@ -15,12 +15,12 @@ export default defineConfig({
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://10.24.10.167:8000',
+        target: 'http://192.168.43.66:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/wsUrl': {
-        target: 'ws://10.24.10.167:8000',
+        target: 'ws://192.168.43.66:8000',
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/wsUrl/, '')
